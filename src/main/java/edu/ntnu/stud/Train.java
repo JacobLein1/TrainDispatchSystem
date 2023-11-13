@@ -8,14 +8,15 @@ import java.time.LocalTime;
  * Departure time(LocalTime), Line(String), Train number(int)
  * Destination(String), Track(int), Delay(LocalTime)
  * Immutable variables: Line, Train number, Destination, Track 
+ * Will throw error messages if wrong value
  */
 public class Train {        //Information regarding train departure
-  final int trainNumber;
-  int track; //"Spor på norsk"
-  final String line; //"Linje på norsk, f.ex L1"
-  final String destination;
-  LocalTime departureTime;
-  LocalTime delay;
+  private final int trainNumber;
+  private int track; //"Spor på norsk"
+  private final String line; //"Linje på norsk, f.ex L1"
+  private final String destination;
+  private LocalTime departureTime;
+  private LocalTime delay;
 
   /**.
   *Constructor for a departure 
@@ -32,44 +33,45 @@ public class Train {        //Information regarding train departure
   }
   //Getter-methods
   
-  public int get_trainNumber() {
+  public int getTrainNumber() {
     return trainNumber;
   }
 
-  public int get_track() {
+  public int getTrack() {
     return track;
   }
 
-  public String get_line() {
+  public String getLine() {
     return line;
   }
 
-  public String get_destination() {
+  public String getDestination() {
     return destination;
   }
 
-  public LocalTime get_departureTime() {
+  public LocalTime getDepartureTime() {
     return departureTime;
   }
 
-  public LocalTime get_delay() {
+  public LocalTime getDelay() {
     return delay;
   }
 
   //Setter-methods
 
-  public void set_track(int newTrack) {  //Set a new track a train will arrive at
+  public void setTrack(int newTrack) {  //Set a new track a train will arrive at
     
     track = newTrack;
   }
   
   //set a new departure time in case of a delay
-  public void set_departureTime(LocalTime newDepartureTime) {        
-    
+  public void setDepartureTime(LocalTime newDepartureTime) {        
+  
     departureTime = newDepartureTime;
   }
   
-  public void set_delayTime(LocalTime addedDelayTime) {              //set a delay for a train
+  public void setDelayTime(LocalTime addedDelayTime) {              //set a delay for a train
+
     delay = addedDelayTime;
   }
 
