@@ -1,5 +1,7 @@
 package edu.ntnu.stud;
 
+import java.time.LocalTime;
+
 /**
  * This is the main class for the train dispatch application.
  */
@@ -8,8 +10,14 @@ public class TrainDispatchApp {
 public static void main(String[] args) {
     UIF t1= new UIF();
     
-    t1.start();
-    t1.init();
+  t1.start();
+  t1.init();
+  LocalTime input = LocalTime.parse("22:46");
+  TrainDeparture barum = new TrainDeparture(1, 2, "L2", "Hovik", input, 1);
 
+  LocalTime input2 = LocalTime.parse("22:46");
+  TrainDeparture oslo= new TrainDeparture(1, 2, "L3", "Grønland", input2, 0);
+  
+  
 }
 }
