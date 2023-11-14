@@ -12,7 +12,7 @@ public class TestTrain {
     void testTrack(){
     LocalTime input = LocalTime.parse("22:46");
     TrainDeparture oslo = new TrainDeparture(1,1,"L3","Bygdøy", input,2);
-    AssertEqual()
+    AssertEqual(1, oslo.getTrainNumber());
     }
     
 }
