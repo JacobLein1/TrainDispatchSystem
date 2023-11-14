@@ -8,41 +8,49 @@ import java.util.stream.Collectors;
  * Will consist of the train registry, as an ArrayList of elements of the class Train.
  */
 public class TrainRegister {
-    private ArrayList<TrainDeparture> trainRegister = new ArrayList<>();
+  private ArrayList<TrainDeparture> trainRegister = new ArrayList<>();
 
-    public void addNewTrainDeparture(TrainDeparture newTrainDeparture){
+  /**.
+   * Add new train departure method
+   */
+  public void addNewTrainDeparture(TrainDeparture newTrainDeparture) {
 
-        if (checkDuplicate(newTrainDeparture)) {
+    if (checkDuplicate(newTrainDeparture)) {
 
-            throw new IllegalArgumentException("Duplicate found!");
+      throw new IllegalArgumentException("Duplicate found!");
 
-        }else{
+    } else {
 
-            trainRegister.add(newTrainDeparture);
+      trainRegister.add(newTrainDeparture);
 
-            System.out.println("New departure added");
-        }
-        
+      System.out.println("New departure added");
     }
 
-    private boolean checkDuplicate(TrainDeparture chosenDeparture){
+  }
 
-        for (int i = 0; i < trainRegister.size(); i++) {
+  private boolean checkDuplicate(TrainDeparture chosenDeparture) {
 
-            if (chosenDeparture.compareTo(trainRegister.get(i))==0) {
+    for (int i = 0; i < trainRegister.size(); i++) {
+
+      if (chosenDeparture.compareTo(trainRegister.get(i)) == 0) {
             
-                return true;
-            }
-        }
-        return false;
+        return true;
+      }
     }
-    public TrainDeparture wantedDeparture(int trainNumber){
-       return trainRegister
+    return false;
+  }
+
+  /**.
+   * 
+   */
+
+  public TrainDeparture wantedDeparture(int trainNumber) {
+    return trainRegister
         .stream()
         .filter(d -> d.getTrainNumber() == trainNumber)
         .findFirst()
         .orElse(null);
-        //.collect(Collectors.toCollection(ArrayList::new));
+    //.collect(Collectors.toCollection(ArrayList::new));
 
     }
     
