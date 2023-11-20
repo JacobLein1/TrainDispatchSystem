@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
  * Will consist of the train registry, as an ArrayList of elements of the class Train.
  */
 public class TrainRegister {
-  private ArrayList<TrainDeparture> trainRegister = new ArrayList<>();
+  private final ArrayList<TrainDeparture> departureList = new ArrayList<>();
 
   /**.
    * Add new train departure method
@@ -21,7 +21,7 @@ public class TrainRegister {
 
     } else {
 
-      trainRegister.add(newTrainDeparture);
+      departureList.add(newTrainDeparture);
 
       System.out.println("New departure added");
     }
@@ -30,9 +30,9 @@ public class TrainRegister {
 
   private boolean checkDuplicate(TrainDeparture chosenDeparture) {
 
-    for (int i = 0; i < trainRegister.size(); i++) {
+    for (int i = 0; i < departureList.size(); i++) {
 
-      if (chosenDeparture.compareTo(trainRegister.get(i)) == 0) {
+      if (chosenDeparture.compareTo(departureList.get(i)) == 0) {
             
         return true;
       }
@@ -41,17 +41,43 @@ public class TrainRegister {
   }
 
   /**.
-   * 
+   * .collect(Collectors.toCollection(ArrayList::new));
+   *@param trainNumber the wanted trainNumber
+   *@return found departures of the right trainNumber
    */
-
+  
   public TrainDeparture wantedDeparture(int trainNumber) {
-    return trainRegister
+
+    return departureList
         .stream()
         .filter(d -> d.getTrainNumber() == trainNumber)
         .findFirst()
-        .orElse(null);
-    //.collect(Collectors.toCollection(ArrayList::new));
+        .orElse(null);   
+  }
 
-    }
+  /**.
+   * 
+   * @return all departures 
+   * 
+   */
+  public TrainDeparture[] getListOfDepartures() {     
+  
+    return departureList
+    .stream()
+    .collect(Collectors.toList()).toArray(new TrainDeparture[0]);
+  }
+  
+  /**.
+   * @param wantedDestination the wanted destination
+   * @return found departures to the wanted destination
+   */
+  public TrainDeparture[] departuresToWantedDestination(String wantedDestination){
     
+    return departureList
+      .stream()
+      .filter(d -> d.getDestination().equals(wantedDestination))
+      .collect(Collectors.toList()).toArray(TrainDeparture[]::new); 
+     
+  }
+
 }
