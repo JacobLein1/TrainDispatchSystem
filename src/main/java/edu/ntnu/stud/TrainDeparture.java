@@ -24,13 +24,13 @@ public class TrainDeparture {        //Information regarding train departure
   private final String line;      //"Linje på norsk, f.ex L1"
   private final String destination;
   private LocalTime departureTime;
-  private int delay;
+  private LocalTime delay;
 
   /**.
   *Constructor for a departure 
   */
   public TrainDeparture(int trainNumber, int track, String line, 
-      String destination, LocalTime departureTime, int delay) {
+      String destination, LocalTime departureTime, LocalTime delay) {
     if (trainNumber < 0) {
       throw new IllegalArgumentException("Train number must be positive. ");
     }
@@ -45,10 +45,6 @@ public class TrainDeparture {        //Information regarding train departure
     } 
     if (departureTime == null) {
       throw new IllegalArgumentException("Must add a departure time. ");
-    }
-    if (delay < 0) {
-      throw new IllegalArgumentException("Delay must be positive.");
-      
     }
     //også hvis den er tom, 0, mellomrom, String
 
@@ -83,7 +79,7 @@ public class TrainDeparture {        //Information regarding train departure
     return departureTime;
   }
 
-  public int getDelay() {
+  public LocalTime getDelay() {
     return delay;
   }
 
@@ -100,7 +96,7 @@ public class TrainDeparture {        //Information regarding train departure
     departureTime = newDepartureTime;
   }
   
-  public void setDelayTime(int addedDelayTime) {              //set a delay for a train
+  public void setDelayTime(LocalTime addedDelayTime) {              //set a delay for a train
     //fiks error melding
     delay = addedDelayTime;
   }
@@ -110,4 +106,26 @@ public class TrainDeparture {        //Information regarding train departure
     return Integer.compare(this.getTrainNumber(), otherDeparture.getTrainNumber());
   }
 
+  public boolean hasDelay() {
+    return this.delay != LocalTime.parse("00:00");
+  } 
+  /**.
+   * @param trainDeparture 
+   * @return The departures time after delay
+   */
+
+  public LocalTime departureTimeAfterDelay(TrainDeparture trainDeparture) {
+    if (trainDeparture.hasDelay()) {
+
+      int newHourOfDeparture = trainDeparture.departureTime
+          .getHour() + trainDeparture.delay.getHour();
+
+      int newMinuteOfDeparture = trainDeparture.departureTime
+          .getMinute() + trainDeparture.delay.getMinute();
+          
+      return LocalTime.of(newHourOfDeparture, newMinuteOfDeparture); 
+    } else {
+      return trainDeparture.departureTime;
+    }
+  }
 }
