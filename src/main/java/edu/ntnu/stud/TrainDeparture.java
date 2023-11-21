@@ -11,7 +11,12 @@ import java.util.Objects;
  * Departure time(LocalTime), Line(String), Train number(int)
  * Destination(String), Track(int), Delay(LocalTime)
  * Immutable variables: Line, Train number, Destination, Track 
- * Will throw error messages if wrong value
+ *
+ *  Will throw error messages if wrong value
+ * 
+ * @author Jacob Lein
+ * @version 1.0
+ * 
  */
 public class TrainDeparture {        //Information regarding train departure
   private final int trainNumber;
@@ -96,7 +101,7 @@ public class TrainDeparture {        //Information regarding train departure
   }
   
   public void setDelayTime(int addedDelayTime) {              //set a delay for a train
-
+    //fiks error melding
     delay = addedDelayTime;
   }
   //method to check if trainnumber already exists
