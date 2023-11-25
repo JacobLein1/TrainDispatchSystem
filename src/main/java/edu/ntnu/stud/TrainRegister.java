@@ -35,15 +35,16 @@ public class TrainRegister {
 
   private boolean checkDuplicate(TrainDeparture chosenDeparture) {
 
-  departureList.stream().filter(d -> d.getTrainNumber() == chosenDeparture.getTrainNumber()).collect(Collectors.toList()).toArray(TrainDeparture[]::new);
-    for (int i = 0; i < departureList.size(); i++) {
+    TrainDeparture[] duplicateStream = departureList.stream().filter(d ->
+     d.getTrainNumber() == chosenDeparture.getTrainNumber())
+    .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
 
-      if (chosenDeparture.compareTo(departureList.get(i)) == 0) {
-            
-        return true;
-      }
+    if (duplicateStream.length == 0) {
+      return false;
+    } else {
+      return true;
     }
-    return false;
+    
   }
 
   /**.
@@ -59,7 +60,7 @@ public class TrainRegister {
         .stream()
         .filter(d -> d.getTrainNumber() == trainNumber)
         .findFirst()
-        .orElse(null);   
+        .orElse(null);
   }
 
   /**.
