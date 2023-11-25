@@ -1,5 +1,10 @@
 package edu.ntnu.stud;
+
+import java.time.LocalTime;
+
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -30,6 +35,7 @@ public class TrainRegister {
 
   private boolean checkDuplicate(TrainDeparture chosenDeparture) {
 
+  departureList.stream().filter(d -> d.getTrainNumber() == chosenDeparture.getTrainNumber()).collect(Collectors.toList()).toArray(TrainDeparture[]::new);
     for (int i = 0; i < departureList.size(); i++) {
 
       if (chosenDeparture.compareTo(departureList.get(i)) == 0) {
@@ -41,10 +47,11 @@ public class TrainRegister {
   }
 
   /**.
-   * .collect(Collectors.toCollection(ArrayList::new));
-   *@param trainNumber the wanted trainNumber
-   *@return found departures of the right trainNumber
-   */
+  *
+  *@param trainnumber the wanted trainnumber
+  *
+  *@return found departures of the right trainNumber
+  */
   
   public TrainDeparture wantedDeparture(int trainNumber) {
 
@@ -57,8 +64,7 @@ public class TrainRegister {
 
   /**.
    * 
-   * @return all departures 
-   * 
+   * @return all departures.
    */
   public TrainDeparture[] getListOfDepartures() {     
   
@@ -68,16 +74,40 @@ public class TrainRegister {
   }
   
   /**.
-   * @param wantedDestination the wanted destination
-   * @return found departures to the wanted destination
-   */
+  * @param wantedDestination the wanted destination
+  *
+  * @return found departures to the wanted destination
+  */
   public TrainDeparture[] departuresToWantedDestination(String wantedDestination){
-    
     return departureList
       .stream()
       .filter(d -> d.getDestination().equals(wantedDestination))
-      .collect(Collectors.toList()).toArray(TrainDeparture[]::new); 
+      .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
      
   }
-
+  /**.
+  * 
+  * @param currentTime User inputs current time.
+  * 
+  * @return The traindepartures after a certain time.
+  */
+  
+  public TrainDeparture[] departuresAfterTime(LocalTime currentTime) {
+    return departureList
+    .stream()
+    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime))
+    .toArray(TrainDeparture[]::new);
+  }
+  /**.
+  * 
+  * @return a sorted list of departures by departure time without regarding delay.
+  * https://www.geeksforgeeks.org/how-to-sort-an-arraylist-of-objects-by-property-in-java/ Link used to make this method
+  */
+  public TrainDeparture[] sortedDepartureList() {
+    
+    return departureList.stream().sorted((d1, d2) -> 
+    d1.getDepartureTime().compareTo(d2.getDepartureTime()))
+    .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
+     
+  }
 }
