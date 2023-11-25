@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Will consist of the train registry, as an ArrayList of elements of the class Train.
  */
 public class TrainRegister {
-  private final ArrayList<TrainDeparture> departureList = new ArrayList<>();
+  private ArrayList<TrainDeparture> departureList = new ArrayList<>();
 
   /**.
    * Add new train departure method
@@ -90,14 +90,12 @@ public class TrainRegister {
   * 
   * @param currentTime User inputs current time.
   * 
-  * @return The traindepartures after a certain time.
+  * 
   */
   
-  public TrainDeparture[] departuresAfterTime(LocalTime currentTime) {
-    return departureList
-    .stream()
-    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime))
-    .toArray(TrainDeparture[]::new);
+  public void departuresAfterTime(LocalTime currentTime) {
+    departureList = departureList.stream()
+    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime)).collect(Collectors.toCollection(ArrayList::new));
   }
   /**.
   * 
