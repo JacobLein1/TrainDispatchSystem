@@ -21,28 +21,32 @@ public class TrainDispatchApp {
 
     t1.init();
     LocalTime input = LocalTime.parse("22:46");
-    TrainDeparture barum = new TrainDeparture(1, 2, "L2", "Hovik", input, 1);
+    TrainDeparture barum = new TrainDeparture(2, 2, "L2",
+         "Hovik", input, LocalTime.parse("00:00"));
 
     LocalTime input2 = LocalTime.parse("22:46");
-    TrainDeparture oslo = new TrainDeparture(1, 2, "L3", "Grønland", input2, 0);
-  
+    TrainDeparture oslo = new TrainDeparture(1, 2, "L3", 
+        "Grønland", input2, LocalTime.parse("00:00"));
+    TrainDeparture bergen = new TrainDeparture(12, 1, "L3",
+         "Bygdøy", LocalTime.of(22, 30), LocalTime.parse("00:02"));
+    TrainDeparture tromso = new TrainDeparture(3, 1, "L3",
+         "Bygdøy", LocalTime.of(22, 30), LocalTime.parse("00:02"));
+
+
     trainRegister.addNewTrainDeparture(oslo);
-    //trainRegister.addNewTrainDeparture(barum);
-
-    TrainDeparture bergen = new TrainDeparture(1, 1, "L3", "Bygdøy", LocalTime.of(22, 30), 2);
-
-    TrainDeparture stabekk = new TrainDeparture(2, 1, "L3", "Bygdøy", LocalTime.of(22, 30), 2);
-
-    TrainDeparture tromso = new TrainDeparture(3, 1, "L3", "Oslo", LocalTime.of(22, 30), 2);
-
+    trainRegister.addNewTrainDeparture(bergen);
+    trainRegister.addNewTrainDeparture(tromso);
+    trainRegister.addNewTrainDeparture(barum);    
+    TrainDeparture stabekk = new TrainDeparture(2, 1, "L3",
+           "Bygdøy", LocalTime.of(22, 30), LocalTime.parse("00:02"));
     TrainDeparture[] expected = {bergen, stabekk};
-    System.out.println("Expected: " + Arrays.toString(expected) + "\n");
-    System.out.println("Actual: " + Arrays.toString(trainRegister.departuresToWantedDestination("Bygdøy")));
-    
     if (bergen.getDestination().equals(stabekk.getDestination())) {
       System.out.println("Riktig");     
     }
 
-  
+    Utils utils = new Utils();
+
+    //System.out.println("skal kaste error");
+    //utils.parseStringToLocalTime(null);
 }
 }
