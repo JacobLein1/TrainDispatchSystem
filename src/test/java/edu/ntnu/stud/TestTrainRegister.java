@@ -12,7 +12,21 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 /**.
- * Class to test methods for TrainRegister class
+ * Class to test methods for TrainRegister class, shown below:
+ * 
+ * Testing of addNewTrainDeparture method includes testing that size of register increases, 
+ * testing that the right value(departure info) is correct
+ *  as well as checking that constructor throws IllegalAgrumentException for duplicate trainnumbers
+ * 
+ * <p> Testing that wantedDeparture method only returns the wanted departure, as well as testing that it 
+ * does not return anything if no match is found.
+ * 
+ * <p> Testing that method getListOfDepartures returns the right list.
+ * 
+ * <p> Testing that method departuresToWantedDestination returns a list of departures to the wanted destionation, 
+ * while excluding departures to other destinations.
+ * 
+ * <p> Testing that method sortedListOfDepartures returns the list of departures in the correct order.
  */
 public class TestTrainRegister {
   TrainRegister testRegister = new TrainRegister();
@@ -24,9 +38,13 @@ public class TestTrainRegister {
     TrainDeparture oslo = new TrainDeparture(1, 1, "L3",
          "Bygdøy", LocalTime.of(22, 30), LocalTime.of(0, 3));
     
-    testRegister.addNewTrainDeparture(oslo);
+    TrainDeparture tromso = new TrainDeparture(2, 1, "L3",
+         "Bygdøy", LocalTime.of(22, 46), LocalTime.of(0, 2));
 
-    assertEquals(1, testRegister.getListOfDepartures().length);
+    testRegister.addNewTrainDeparture(oslo);
+    testRegister.addNewTrainDeparture(tromso);
+
+    assertEquals(2, testRegister.getListOfDepartures().length);
   }
 
   @Test
@@ -56,10 +74,14 @@ public class TestTrainRegister {
   public void testwantedDeparture() {
     TrainDeparture oslo = new TrainDeparture(1, 1, "L3",
         "Bygdøy", LocalTime.of(22, 30), LocalTime.of(0, 2));
-    testRegister.addNewTrainDeparture(oslo);
+    TrainDeparture tromso = new TrainDeparture(2, 1, "L3",
+         "Bygdøy", LocalTime.of(22, 46), LocalTime.of(0, 2));
+        testRegister.addNewTrainDeparture(oslo);
+        testRegister.addNewTrainDeparture(tromso);
 
     assertEquals(oslo, testRegister.wantedDeparture(1));
   }
+  
   @Test
   public void testWantedDepartureNotFound() {
     TrainDeparture oslo = new TrainDeparture(1, 1, "L3", "Bygdøy",
@@ -101,16 +123,20 @@ public class TestTrainRegister {
   
   @Test
   public void testSortedListOfDepartures() {
+
+    TrainDeparture haslum = new TrainDeparture(3, 2, "L3", "Bygdøy",
+        LocalTime.of(23, 40), LocalTime.of(0, 0));
     TrainDeparture oslo = new TrainDeparture(1, 1, "L3", "Bygdøy",
         LocalTime.of(22, 28), LocalTime.of(0, 3));
 
     TrainDeparture stabekk = new TrainDeparture(2, 1, "L3", "Bygdøy",
         LocalTime.of(22, 30), LocalTime.of(0, 0));
     
+    testRegister.addNewTrainDeparture(haslum);
     testRegister.addNewTrainDeparture(stabekk);
     testRegister.addNewTrainDeparture(oslo);
     
-    TrainDeparture[] expected = {oslo, stabekk};
+    TrainDeparture[] expected = {oslo, stabekk, haslum};
 
     assertArrayEquals(expected, testRegister.sortedDepartureList());
   }
