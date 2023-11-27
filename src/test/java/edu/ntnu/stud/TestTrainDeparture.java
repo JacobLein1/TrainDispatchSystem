@@ -1,10 +1,11 @@
 package edu.ntnu.stud;
-
-import org.junit.jupiter.api.Test;
+import edu.ntnu.stud.Models.TrainDeparture;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalTime;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+
 
 
 class TestTrainDeparture {
@@ -48,5 +49,15 @@ class TestTrainDeparture {
       
     assertEquals(100000, barum.getTrainNumber());
 
+  }
+
+  @Test
+  void testAddDelayTime() {
+    LocalTime input = LocalTime.parse("22:46");
+    TrainDeparture barum = new TrainDeparture(0001, 2, "L2", "Hovik", input, LocalTime.of(0, 1));
+
+    barum.addDelayTime(barum, LocalTime.of(0, 2));
+    
+    assertEquals(LocalTime.of(0, 3), barum.getDelay());
   }
 }
