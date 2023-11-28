@@ -102,11 +102,10 @@ public class TrainDeparture {        //Information regarding train departure
  *                      Should be in the format of {@code LocalTime}.
  *                      It represents both hours and minutes to be added.
  */
-  public void addDelayTime(TrainDeparture trainDeparture,
-      LocalTime addedDelayTime) {                         //set a delay for a train
+  public void addDelay(LocalTime addedDelayTime) {    //set a delay for a train
 
-    trainDeparture.delay = trainDeparture.delay.plusMinutes(addedDelayTime.getMinute());
-    trainDeparture.delay = trainDeparture.delay.plusHours(addedDelayTime.getHour());
+    delay = delay.plusMinutes(addedDelayTime.getMinute());
+    delay = delay.plusHours(addedDelayTime.getHour());
     
   }
   //method to check if trainnumber already exists
