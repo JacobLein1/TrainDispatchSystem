@@ -4,6 +4,7 @@ import edu.ntnu.stud.Models.TrainDeparture;
 
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -55,17 +56,32 @@ public class UserInterface {
   }
 
 
-
-  public static void askUser(String question, String returnDatatype) {
+  //Start to possible solution to make prettier code, method with only function to handle user
+  //inputs and give resulting output
+  /* public static <T> T askUser(String question, String returnDatatype) {
     Scanner input = new Scanner(System.in);
     System.out.println(question);
-    
-    String integer = "Int"; String booleaN = "bool"; 
 
-    if (returnDatatype == integer) {
+    String userInput = input.nextLine();
+    T result;
 
+    switch (returnDatatype) {
+      case "Int":
+        result = Integer.parseInt(userInput);
+        break;
+      
+      case "LocalTime":
+      
+        break;
+      default:
+        break;
     }
-  }
+    input.close();
+    }
+
+  ///<Integer>askUser("what is that", "Int"); */
+
+  
   /**.
    * Starts up the menu.
    */
@@ -105,51 +121,119 @@ public class UserInterface {
     
           break;
         case 2: 
+          System.out.println("What departure will you like to grant a track? Enter train number.");
 
+          
           break;
-        case 3: 
-        
-          break;  
-        case 4: 
-        //Asks user what coorrelating train number is to the train number they are looking for
-        System.out.println("What is the train number? ");
-        //Store their input into a string
-        String trainNumberInput = input.next();
-        //Check that their input matches the requirements for the method, right 
-        while (!Pattern.matches("\\d{2}", trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)){
-        System.out.println("Train number must be in the right format, [00-99]. Please try again.");
-          trainNumberInput = input.next();
+          
+        case 3: {
+
+          System.out.println("To which departure do you wish to add a delay? Enter train number.");
+  
+          String trainNumberInput = input.next();
+
+          //Checks if input is on format hh:mm
+          while (!Pattern.matches("\\d{2}",
+           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
+            System.out.println(
+                "Train number must be in the right format, [00-99]. Please try again.");
+            trainNumberInput = input.next();
+          }
+          
+          System.out.println("How much of a delay do you want to add? Enter as hh:mm");
+          
+          
+          boolean running = true;
+          while (running) {
+            String delayInput = input.next();
+            
+            //KILDE chatGPT om hvordan catche DateTimeParseException
+            ////Checks if delay is on right format within [00-23]:[00-59], and if yes, adds delay
+            if (delayInput.matches("\\d{2}:\\d{2}")) {
+              try {
+                
+                LocalTime delayParsed = Parse.parseStringToLocalTime(delayInput);
+                trainRegister.wantedDeparture(Integer
+                .parseInt(trainNumberInput)).addDelayTime(delayParsed);
+                running = false;
+                
+              } catch (DateTimeParseException e) {
+                System.out.println("Time must match format hh:mm. Please try again.");
+              } 
+            } else {
+              System.out.println("Delay must match format hh:mm. Please try again");
+
+            }
+            
+            
+          }    
         }
-        //Store the wanted departure as a variable
-        TrainDeparture wantedDeparture = trainRegister.wantedDeparture(Integer.parseInt(trainNumberInput));
-        //If departure not found, tell user
-        if (wantedDeparture == null) {
-        System.out.println("Departure not found.");          
-        } else { //Print wanted departure in nice style
-        System.out.println("\nWanted departure:");
-        System.out.println("-------------------------------------------------------------------------\n" + 
-        wantedDeparture.departureToString() + "\n-------------------------------------------------------------------------\n");
+
+          break;  
+
+        case 4: { 
+          //Asks user what coorrelating train number is to the train number they are looking for
+          System.out.println("What is the train number? ");
+          //Store their input into a string
+          String trainNumberInput = input.next();
+          //Check that their input matches the requirements for the method, right 
+          while (!Pattern.matches("\\d{2}",
+           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
+            System.out.println(
+                "Train number must be in the right format, [00-99]. Please try again.");
+            trainNumberInput = input.next();
+          }
+
+          //Store the wanted departure as a variable
+          TrainDeparture wantedDeparture = trainRegister
+              .wantedDeparture(Integer.parseInt(trainNumberInput));
+          //If departure not found, tell user
+          if (wantedDeparture == null) {
+            System.out.println("Departure not found.");          
+          } else { //Print wanted departure in nice style
+            System.out.println("\nWanted departure:");
+            System.out.println(
+                "-------------------------------------------------------------------------\n" + 
+                wantedDeparture.departureToString() 
+                + "\n-------------------------------------------------------------------------\n");
+          }
         }
           break;
         case 5: 
         
           break;
-        case 6: 
+        case 6: { 
 
-        System.out.println("Current time is " + clock + "\nEnter new time as HH:MM - ");
+          System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
         
-        String time = input.next();
-        
-        do {
-            System.out.println("Time must match format HH:MM in intervals [00-23]:[00-59] (f.ex 23:59) and be after current time. Please try again. ");          
-          time = input.next();
-        } while (!time.matches("\\d{2}:\\d{2}") || Parse.parseStringToLocalTime(time).isBefore(clock)||Parse.parseStringToLocalTime(time).getMinute()>59 || Parse.parseStringToLocalTime(time).getHour()>23);
-
-        clock = Parse.parseStringToLocalTime(time);
+          String time;
+          boolean running = true;
+          while (running) {
+            
+            time = input.next();
+            
+            if (time.matches("\\d{2}:\\d{2}")) {
+              try {
+                if (Parse.parseStringToLocalTime(time).isBefore(clock)) {
+                  System.out.println("New time must be after current time.");     
+                } else {
+                  clock = Parse.parseStringToLocalTime(time);
+                  running = false;
+                }
+              } catch (DateTimeParseException e) {
+                System.out.println("Hours must be in interval [00-23]" 
+                    + " and minutes must be in interval [00-59]. Please try again.");
+              } 
+            } else {
+              System.out.println("Time must match format hh:mm. Please try again.");
+            }
+            
+          }    
+        }
           break;
         case 7: 
 
-        System.out.println("Exiting...");
+          System.out.println("Exiting...");
 
           break;
         default:
@@ -160,7 +244,7 @@ public class UserInterface {
     }
 
     
-
+    input.close();
   }
  
 
