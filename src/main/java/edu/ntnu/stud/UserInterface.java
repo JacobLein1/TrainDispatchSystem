@@ -51,6 +51,10 @@ public class UserInterface {
     TrainDeparture nesodden = new TrainDeparture(05, 0, "L3",
           "Nesodden", LocalTime.of(0, 30), LocalTime.of(0, 0));
     trainRegister.addNewTrainDeparture(nesodden);
+
+    TrainDeparture gardemoen = new TrainDeparture(6, 7, "R1",
+     "Gardemoen", LocalTime.of(15, 10), LocalTime.of(0, 0));
+     trainRegister.addNewTrainDeparture(gardemoen);
    
     return trainRegister;
   }
@@ -90,7 +94,7 @@ public class UserInterface {
     Scanner input = new Scanner(System.in);
     int choice = 0;
 
-    while (choice != 7) {
+    while (choice != 8) {
       trainRegister.departuresAfterTime(clock);
 
       System.out.println("\n");
@@ -107,26 +111,57 @@ public class UserInterface {
 
       System.out.println("What would you like to do? Choose an option between 1-9.");
       System.out.println("1. Add new train departure.");
-      System.out.println("2. Grant departure a track. ");
-      System.out.println("3. Add delay to a departure. ");
-      System.out.println("4. Find specific departure by train number. ");
-      System.out.println("5. Find departures by destination.");
-      System.out.println("6. Update clock. ");
-      System.out.println("7. Exit menu. ");
+      System.out.println("2. Remove departure");
+      System.out.println("3. Grant departure a track. ");
+      System.out.println("4. Add delay to a departure. ");
+      System.out.println("5. Find specific departure by train number. ");
+      System.out.println("6. Find departures by destination.");
+      System.out.println("7. Update clock. ");
+      System.out.println("8. Exit menu. ");
 
       choice = input.nextInt();
 
       switch (choice) {
-        case 1:
-    
-          break;
-        case 2: 
-          System.out.println("What departure will you like to grant a track? Enter train number.");
+        case 1:{
+          System.out.println("What is going to be the new trainnumber?");
+          int trainNumberInput = Integer.parseInt(input.next());
 
+          System.out.println("What is the relating track, if not granted yet, press 0. ");
+          int trackInput = Integer.parseInt(input.next());
+          while (trackInput > 0) {
+            
+          }
           
+          
+        }
+          break;
+        case 2:
+        
+          break;
+        case 3: { 
+          System.out.println("What departure will you like to grant a track? Enter train number.");
+          String trainNumberInput = input.next();
+
+          //Checks if input is on format hh:mm
+          while (!Pattern.matches("\\d{2}",
+           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
+            System.out.println(
+                "Train number must be in the right format, [00-99]. Please try again.");
+            trainNumberInput = input.next();
+          }
+          System.out.println("What track will you give this departure? Enter a number between 1-9.");
+          String track = input.next();
+          
+          while (!Pattern.matches("\\d", track) || Integer.parseInt(track)>9) {
+            System.out.println("Tracknumber must be between 1-9. Please try again.");
+            track = input.next();
+          }
+          
+          trainRegister.wantedDeparture(Integer.parseInt(trainNumberInput)).setTrack(Integer.parseInt(track));
+        }
           break;
           
-        case 3: {
+        case 4: {
 
           System.out.println("To which departure do you wish to add a delay? Enter train number.");
   
@@ -148,13 +183,13 @@ public class UserInterface {
             String delayInput = input.next();
             
             //KILDE chatGPT om hvordan catche DateTimeParseException
-            ////Checks if delay is on right format within [00-23]:[00-59], and if yes, adds delay
+            //Checks if delay is on right format within [00-23]:[00-59], and if yes, adds delay
             if (delayInput.matches("\\d{2}:\\d{2}")) {
               try {
                 
                 LocalTime delayParsed = Parse.parseStringToLocalTime(delayInput);
                 trainRegister.wantedDeparture(Integer
-                .parseInt(trainNumberInput)).addDelayTime(delayParsed);
+                .parseInt(trainNumberInput)).addDelay(delayParsed);
                 running = false;
                 
               } catch (DateTimeParseException e) {
@@ -171,7 +206,7 @@ public class UserInterface {
 
           break;  
 
-        case 4: { 
+        case 5: { 
           //Asks user what coorrelating train number is to the train number they are looking for
           System.out.println("What is the train number? ");
           //Store their input into a string
@@ -199,10 +234,45 @@ public class UserInterface {
           }
         }
           break;
-        case 5: 
+        case 6: {
+        System.out.println("Where do you want to go? ");
+        input.nextLine(); 
+      
+        //while (!Pattern.matches("\\%s", destination)) {
+          //System.out.println("Destination is written with only letters. Please try again.");
+          //destination = input.nextLine();
+        //}
+          boolean running = true;
+          String destinationInput = "";
+
+          while (running) {
+            destinationInput = input.nextLine().trim();
+            TrainDeparture[] wantedDepartureList = trainRegister
+              .departuresToWantedDestination(destinationInput);
+         
+            if (wantedDepartureList.length == 0) {
+              System.out.println("No departure by the name of " 
+                  + destinationInput + " found, please try again.");
+            } else {
+              running = false;
+            
+            }
+          }
+          System.out.println("\n");
+          System.out.println(
+              "----------------------------------" + clock + "---------------------------------");
+          System.out.println(
+                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
+          System.out.println(
+                "|_______________________________________________________________________|");
+          Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
+              .forEach(d -> System.out.println(d.departureToString()));
+          System.out.println(
+              "--------------------------------------------------------------------------");
         
+        }
           break;
-        case 6: { 
+        case 7: { 
 
           System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
         
@@ -231,13 +301,13 @@ public class UserInterface {
           }    
         }
           break;
-        case 7: 
+        case 8: 
 
           System.out.println("Exiting...");
 
           break;
         default:
-          System.out.println("You must write a number between 1-7. ");
+          System.out.println("You must write a number between 1-8. ");
           break;
       } 
       
@@ -245,6 +315,9 @@ public class UserInterface {
 
     
     input.close();
+  }
+  public int parseAndValidateTrainNumber() {
+
   }
  
 
