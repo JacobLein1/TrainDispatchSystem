@@ -21,6 +21,7 @@ public class UserInterface {
    
   TrainRegister trainRegister = new TrainRegister();
   LocalTime clock;
+  Scanner input = new Scanner(System.in);
   
   /**.
    * Method to initalise all pre-set departures.
@@ -85,25 +86,32 @@ public class UserInterface {
 
   ///<Integer>askUser("what is that", "Int"); */
 
-  
+  /**.
+   * Method to print format above departure, for visuals.
+   */
+  public void printDepartureFormatStart() {
+    System.out.println("\n");
+    System.out.println(
+        "----------------------------------" + clock + "---------------------------------");
+    System.out.println(
+                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
+    System.out.println(
+                "|_______________________________________________________________________|");
+  }
+
+
   /**.
    * Starts up the menu.
    */
   public void start() {
     
-    Scanner input = new Scanner(System.in);
     int choice = 0;
 
     while (choice != 8) {
       trainRegister.departuresAfterTime(clock);
 
-      System.out.println("\n");
-      System.out.println(
-          "----------------------------------" + clock + "---------------------------------");
-      System.out.println(
-          "|  Departure Time    Line  Train number    Destination   Track    Delay |");
-      System.out.println(
-          "|_______________________________________________________________________|");
+      printDepartureFormatStart();
+      
       Arrays.stream(trainRegister.sortedDepartureList())
           .forEach(d -> System.out.println(d.departureToString()));
       System.out.println(
@@ -122,15 +130,27 @@ public class UserInterface {
       choice = input.nextInt();
 
       switch (choice) {
-        case 1:{
+        case 1: {
           System.out.println("What is going to be the new trainnumber?");
-          int trainNumberInput = Integer.parseInt(input.next());
+          String trainNumberInput = input.next();
+
+          int trainNumber = trainNumberParseAndValidate(trainNumberInput);
 
           System.out.println("What is the relating track, if not granted yet, press 0. ");
-          int trackInput = Integer.parseInt(input.next());
-          while (trackInput > 0) {
-            
+          
+          String trackInput = input.next();
+
+          int trackNumber = trackNumberParseAndValidate(trackInput);
+          
+          System.out.println("What is the departure`s designated line? ");
+
+          String lineInput = input.next();
+          while (lineInput.length() > 4) {
+            System.out.println(
+                "Line must be shorter 3 characters or shorter, f.ex L1. Please try again");
+            lineInput = input.next();
           }
+          
           
           
         }
@@ -143,21 +163,16 @@ public class UserInterface {
           String trainNumberInput = input.next();
 
           //Checks if input is on format hh:mm
-          while (!Pattern.matches("\\d{2}",
-           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
-            System.out.println(
-                "Train number must be in the right format, [00-99]. Please try again.");
-            trainNumberInput = input.next();
-          }
-          System.out.println("What track will you give this departure? Enter a number between 1-9.");
-          String track = input.next();
+          int trainNumber = trainNumberParseAndValidate(trainNumberInput);
+
+          System.out.println(
+              "What track will you give this departure? Enter a number between 1-9.");
+          String trackNumberInput = input.next();
+
+          int trackNumber = trackNumberParseAndValidate(trackNumberInput);
           
-          while (!Pattern.matches("\\d", track) || Integer.parseInt(track)>9) {
-            System.out.println("Tracknumber must be between 1-9. Please try again.");
-            track = input.next();
-          }
-          
-          trainRegister.wantedDeparture(Integer.parseInt(trainNumberInput)).setTrack(Integer.parseInt(track));
+          trainRegister.wantedDeparture(trainNumber)
+              .setTrack(trackNumber);
         }
           break;
           
@@ -168,12 +183,8 @@ public class UserInterface {
           String trainNumberInput = input.next();
 
           //Checks if input is on format hh:mm
-          while (!Pattern.matches("\\d{2}",
-           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
-            System.out.println(
-                "Train number must be in the right format, [00-99]. Please try again.");
-            trainNumberInput = input.next();
-          }
+          int trainNumber = trainNumberParseAndValidate(trainNumberInput);
+
           
           System.out.println("How much of a delay do you want to add? Enter as hh:mm");
           
@@ -188,8 +199,8 @@ public class UserInterface {
               try {
                 
                 LocalTime delayParsed = Parse.parseStringToLocalTime(delayInput);
-                trainRegister.wantedDeparture(Integer
-                .parseInt(trainNumberInput)).addDelay(delayParsed);
+                trainRegister.wantedDeparture((trainNumber))
+                    .addDelay(delayParsed);
                 running = false;
                 
               } catch (DateTimeParseException e) {
@@ -207,21 +218,14 @@ public class UserInterface {
           break;  
 
         case 5: { 
-          //Asks user what coorrelating train number is to the train number they are looking for
           System.out.println("What is the train number? ");
-          //Store their input into a string
           String trainNumberInput = input.next();
-          //Check that their input matches the requirements for the method, right 
-          while (!Pattern.matches("\\d{2}",
-           trainNumberInput) && !Pattern.matches("\\d", trainNumberInput)) {
-            System.out.println(
-                "Train number must be in the right format, [00-99]. Please try again.");
-            trainNumberInput = input.next();
-          }
+           
+          int trainNumber = trainNumberParseAndValidate(trainNumberInput);
 
           //Store the wanted departure as a variable
           TrainDeparture wantedDeparture = trainRegister
-              .wantedDeparture(Integer.parseInt(trainNumberInput));
+              .wantedDeparture(trainNumber);
           //If departure not found, tell user
           if (wantedDeparture == null) {
             System.out.println("Departure not found.");          
@@ -235,8 +239,8 @@ public class UserInterface {
         }
           break;
         case 6: {
-        System.out.println("Where do you want to go? ");
-        input.nextLine(); 
+          System.out.println("Where do you want to go? ");
+          input.nextLine(); 
       
         //while (!Pattern.matches("\\%s", destination)) {
           //System.out.println("Destination is written with only letters. Please try again.");
@@ -258,13 +262,8 @@ public class UserInterface {
             
             }
           }
-          System.out.println("\n");
-          System.out.println(
-              "----------------------------------" + clock + "---------------------------------");
-          System.out.println(
-                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
-          System.out.println(
-                "|_______________________________________________________________________|");
+          printDepartureFormatStart();
+          
           Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
               .forEach(d -> System.out.println(d.departureToString()));
           System.out.println(
@@ -316,8 +315,38 @@ public class UserInterface {
     
     input.close();
   }
-  public int parseAndValidateTrainNumber() {
 
+  /**.
+   *
+   * @param userInput input wanted parsed and validated.
+   * @return parsed and validated int trainNumber.
+   * 
+   */
+  public int trainNumberParseAndValidate(String userInput) {
+
+    //Checks if input is on format hh:mm
+
+    while (!Pattern.matches("\\d{2}",
+      userInput) && !Pattern.matches("\\d", userInput)) {
+      System.out.println(
+          "Train number must be in the right format, [00-99]. Please try again.");
+      userInput = input.next();
+    }
+    return Integer.parseInt(userInput);
+  }
+
+  /**
+   *
+   * @param userInput Input wanted to be parsed and validated.
+   * @return input parsed and validated.
+   * 
+   */
+  public int trackNumberParseAndValidate(String userInput) {
+    while (!Pattern.matches("\\d", userInput) || Integer.parseInt(userInput) > 9) {
+      System.out.println("Tracknumber must be between 1-9. Please try again.");
+      userInput = input.next();
+    }
+    return Integer.parseInt(userInput);
   }
  
 
