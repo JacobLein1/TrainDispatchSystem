@@ -102,7 +102,9 @@ public class TrainDeparture {        //Information regarding train departure
  *                      Should be in the format of {@code LocalTime}.
  *                      It represents both hours and minutes to be added.
  */
-  public void addDelay(LocalTime addedDelayTime) {    //set a delay for a train
+
+  //Set delay function, but adds instead. 
+  public void addDelay(LocalTime addedDelayTime) {    
 
     delay = delay.plusMinutes(addedDelayTime.getMinute());
     delay = delay.plusHours(addedDelayTime.getHour());
@@ -148,7 +150,7 @@ public class TrainDeparture {        //Information regarding train departure
 
     String result = "";
 
-    result += String.format("|      %4s          %2s        %1o      %14s",
+    result += String.format("|      %4s          %2s       %2d      %14s",
      departureTime.toString(), line, trainNumber, destination);
 
     if (track != -1) {
