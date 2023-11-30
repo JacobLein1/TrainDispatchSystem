@@ -56,7 +56,7 @@ class TestTrainDeparture {
     LocalTime input = LocalTime.parse("22:46");
     TrainDeparture barum = new TrainDeparture(0001, 2, "L2", "Hovik", input, LocalTime.of(0, 1));
 
-    barum.addDelayTime(barum, LocalTime.of(0, 2));
+    barum.addDelay(LocalTime.of(0, 2));
     
     assertEquals(LocalTime.of(0, 3), barum.getDelay());
   }
