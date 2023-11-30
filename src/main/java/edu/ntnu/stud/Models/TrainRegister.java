@@ -4,8 +4,7 @@ import java.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import edu.ntnu.stud.UserInterface;
@@ -30,11 +29,12 @@ public class TrainRegister {
   
 
   private ArrayList<TrainDeparture> departureList = new ArrayList<>();
-  LocalTime clock = LocalTime.of(0, 0);
+  private static LocalTime clock = LocalTime.of(0, 0);
   /**.
    * Add new train departure method
    */
-  public void addNewTrainDeparture(TrainDeparture newTrainDeparture) {
+
+  public void addNewDeparture(TrainDeparture newTrainDeparture) {
 
     if (checkDuplicate(newTrainDeparture)) {
 
@@ -43,7 +43,17 @@ public class TrainRegister {
     } else {
       departureList.add(newTrainDeparture);
     }
+  }
+  /**.
+   *
+   * @param trainNumber Train number of departure wanted to be removed
+   * 
+   */
 
+  public void removeDeparture(int trainNumber) {
+
+    departureList = departureList.stream().filter(d -> d.getTrainNumber() == trainNumber)
+      .collect(Collectors.toCollection(ArrayList::new));
   }
 
   private boolean checkDuplicate(TrainDeparture chosenDeparture) {
@@ -76,8 +86,10 @@ public class TrainRegister {
         .orElse(null);
   }
 
+  
+
   /**.
-   * 
+   *
    * @return all departures.
    */
   public TrainDeparture[] getListOfDepartures() {     
@@ -93,10 +105,10 @@ public class TrainRegister {
   *
   * @return found departures to the wanted destination
   */
-  public TrainDeparture[] departuresToWantedDestination(String wantedDestination){
+  public TrainDeparture[] departuresToWantedDestination(String wantedDestination) {
     return departureList
       .stream()
-      .filter(d -> d.getDestination().equals(wantedDestination))
+      .filter(d -> d.getDestination().equalsIgnoreCase(wantedDestination))
       .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
      
   }
@@ -109,14 +121,14 @@ public class TrainRegister {
   
   public void departuresAfterTime(LocalTime currentTime) {
     departureList = departureList.stream()
-    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime)).
-    collect(Collectors.toCollection(ArrayList::new));
+    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime))
+    .collect(Collectors.toCollection(ArrayList::new));
   }
   /**.
   *
   * @return a sorted list of departures by departure time without regarding delay.
-    * https://www.geeksforgeeks.org/how-to-sort-an-arraylist-of-objects-by-property-in-java/ Link
-    used to make this method
+  * https://www.geeksforgeeks.org/how-to-sort-an-arraylist-of-objects-by-property-in-java/ Link
+  used to make this method
   */
 
   public TrainDeparture[] sortedDepartureList() {
@@ -127,6 +139,10 @@ public class TrainRegister {
      
   }
 
+  /**.
+   * Method to print the trainregister sorted by departure time.
+   * 
+   */
   public void printSortedList() {
     
     System.out.println("\n");
