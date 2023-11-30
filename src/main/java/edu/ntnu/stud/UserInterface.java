@@ -2,17 +2,18 @@ package edu.ntnu.stud;
 
 import edu.ntnu.stud.Models.TrainDeparture;
 
-
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+
 import java.util.Scanner;
+
 import java.util.regex.Pattern;
 
 import edu.ntnu.stud.Utils.Parse;
 import edu.ntnu.stud.Models.TrainRegister;
-import edu.ntnu.stud.Utils.Print;
+
 
 
 /**.
@@ -33,32 +34,35 @@ public class UserInterface {
 
     clock = LocalTime.of(0, 0);
     
-    TrainDeparture stabekk = new TrainDeparture(01, 1, "L1",
-         "Spikkestad", LocalTime.of(10, 0), LocalTime.of(0, 0));
+    TrainDeparture spikkestad = new TrainDeparture(1, 4, "L11",
+         "Spikkestad", LocalTime.of(7, 20), LocalTime.of(0, 0));
     
-    trainRegister.addNewDeparture(stabekk);
+    trainRegister.addNewDeparture(spikkestad);
 
-    TrainDeparture rykkin = new TrainDeparture(02, 2, "L2",
-         "Sandvika", LocalTime.of(10, 45), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(rykkin);
+    TrainDeparture sandvika = new TrainDeparture(02, 2, "L2",
+         "Sandvika", LocalTime.of(9, 45), LocalTime.of(0, 0));
+    trainRegister.addNewDeparture(sandvika);
 
-    TrainDeparture hovik = new TrainDeparture(03, 0, "L2",
-         "Nedre Hovik", LocalTime.of(14, 0), LocalTime.of(0, 5));
-    trainRegister.addNewDeparture(hovik);
+    TrainDeparture nedreHovik = new TrainDeparture(03, 0, "L2",
+         "Nedre Hovik", LocalTime.of(12, 10), LocalTime.of(0, 0));
+    trainRegister.addNewDeparture(nedreHovik);
 
     TrainDeparture bergen = new TrainDeparture(04, 3, "L3",
           "Bergen", LocalTime.of(12, 0), LocalTime.of(0, 0));
     trainRegister.addNewDeparture(bergen);
 
-    TrainDeparture nesodden = new TrainDeparture(11, 0, "L3",
-          "Nesodden", LocalTime.of(0, 30), LocalTime.of(0, 0));
+    TrainDeparture nesodden = new TrainDeparture(11, 1, "L3",
+          "Nesodden", LocalTime.of(0, 30), LocalTime.of(0, 4));
     trainRegister.addNewDeparture(nesodden);
-    System.out.println(nesodden.getTrainNumber());
 
-    TrainDeparture gardemoen = new TrainDeparture(6, 7, "R1",
+    TrainDeparture gardemoen = new TrainDeparture(6, 0, "R1",
         "Gardemoen", LocalTime.of(15, 10), LocalTime.of(0, 0));
     trainRegister.addNewDeparture(gardemoen);
    
+    TrainDeparture ovreHovik = new TrainDeparture(5, 2, "R12",
+         "Øvre Høvik", LocalTime.of(18, 00), LocalTime.of(0, 0));
+    trainRegister.addNewDeparture(ovreHovik);
+
     return trainRegister;
   }
 
@@ -130,10 +134,18 @@ public class UserInterface {
       System.out.println("8. Exit menu. ");
       
       String userInput = input.next();
-      try {
-        choice = Integer.parseInt(userInput);
-      } catch (InputMismatchException e) {
-        System.out.println("Choice must be a number between 1-7. Please try again.");
+      boolean validating = true;
+
+      while (validating) {
+
+        try {
+          choice = Integer.parseInt(userInput);
+          validating = false;
+        } catch (NumberFormatException nfe) {
+          System.out.println("You must enter a number. Between 1-8.");
+      
+          userInput = input.next();
+      }
       }
       
 
@@ -159,7 +171,7 @@ public class UserInterface {
           String lineInput = input.next();
           while (lineInput.length() > 4) {
             System.out.println(
-                "Line must be shorter 3 characters or shorter, f.ex L1. Please try again");
+                "Line must be 3 characters or shorter, f.ex L11. Please try again");
             lineInput = input.next();
           }
           
@@ -169,6 +181,11 @@ public class UserInterface {
           System.out.println("What is the departures destination? ");
 
           String destination = input.nextLine();
+          if (destination.length() > 14) {
+            System.out.println(
+                "Destination name can not be longer than 14 characters. Please try again. ");
+            destination = input.nextLine();
+          }
           
           System.out.println("When does the train depart? Enter as hh:mm");
 
@@ -191,6 +208,8 @@ public class UserInterface {
                           + validTrainnumber + " does not exits.");            
           }
           trainRegister.removeDeparture(validTrainnumber);
+
+          System.out.println("Departure with train number " + validTrainnumber + " removed.");
 
           break;
         case 3: { 
@@ -254,10 +273,6 @@ public class UserInterface {
           System.out.println("Where do you want to go? ");
           input.nextLine(); 
       
-        //while (!Pattern.matches("\\%s", destination)) {
-          //System.out.println("Destination is written with only letters. Please try again.");
-          //destination = input.nextLine();
-        //}
           boolean running = true;
           String destinationInput = "";
 
@@ -289,6 +304,7 @@ public class UserInterface {
         
           String time;
           boolean running = true;
+
           while (running) {
             
             time = input.next();
@@ -319,6 +335,7 @@ public class UserInterface {
         default:
           System.out.println("You must write a number between 1-8. ");
           break;
+        
       } 
       
     }
@@ -329,7 +346,7 @@ public class UserInterface {
 
   /**.
    *
-   * @param userInput input wanted parsed and validated.
+   *
    * @return parsed and validated int trainNumber.
    * 
    */
@@ -348,16 +365,18 @@ public class UserInterface {
 
   /**
    *
-   * @param userInput String input wanted to be parsed and validated.
    * @return input validated and parsed to int.
    * 
    */
   public int getValidTrackNumber() {
+
     String trackNumberInput = input.next();
+
     while (!Pattern.matches("\\d", trackNumberInput) || Integer.parseInt(trackNumberInput) > 9) {
       System.out.println("Tracknumber must be between 0-9. Please try again.");
       trackNumberInput = input.next();
     }
+
     return Integer.parseInt(trackNumberInput);
   }
   /**.
@@ -365,6 +384,7 @@ public class UserInterface {
    * @return LocalTime parsed and validated.
    * 
    */
+
   public LocalTime getValidLocalTime() {
     
     String localTime;
@@ -385,7 +405,7 @@ public class UserInterface {
                     + " and minutes must be in interval [00-59]. Please try again.");
         } 
       } else {
-        System.out.println("Time must match format hh:mm. Please try again.");
+        System.out.println("\nTime must match format hh:mm. Please try again.");
       }
             
     }
