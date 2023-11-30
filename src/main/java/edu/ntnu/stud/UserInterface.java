@@ -1,19 +1,14 @@
 package edu.ntnu.stud;
 
-import edu.ntnu.stud.Models.TrainDeparture;
+import edu.ntnu.stud.Utils.Parser;
+import edu.ntnu.stud.models.TrainDeparture;
+import edu.ntnu.stud.models.TrainRegister;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.InputMismatchException;
-
 import java.util.Scanner;
-
 import java.util.regex.Pattern;
-
-import edu.ntnu.stud.Utils.Parse;
-import edu.ntnu.stud.Models.TrainRegister;
-
 
 
 /**.
@@ -93,20 +88,6 @@ public class UserInterface {
   ///<Integer>askUser("what is that", "Int"); */
 
   /**.
-   * Method to print format above departure, for visuals.
-   */
-  public void printDepartureFormatStart() {
-    System.out.println("\n");
-    System.out.println(
-        "----------------------------------" + clock + "---------------------------------");
-    System.out.println(
-                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
-    System.out.println(
-                "|_______________________________________________________________________|");
-  }
-
-
-  /**.
    * Starts up the menu.
    */
   public void start() {
@@ -151,181 +132,37 @@ public class UserInterface {
 
       switch (choice) {
         case 1: {
-          System.out.println("What is the train number of the new departure? ");
-
-          //Instant feed-back if train number ID is taken
-          int trainNumber = getValidTrainNumber();
-          while (trainRegister.wantedDeparture(trainNumber) != null) {
-            System.out.println(
-                "Used train number. Please enter a new train number.");
-            trainNumber = getValidTrainNumber();
-          }
-
-          System.out.println("Which track will the train be arriving at" 
-              + ", if not granted yet, enter 0. ");
-          
-          int trackNumber = getValidTrackNumber();
-          
-          System.out.println("What is the departure`s designated line? ");
-
-          String lineInput = input.next();
-          while (lineInput.length() > 4) {
-            System.out.println(
-                "Line must be 3 characters or shorter, f.ex L11. Please try again");
-            lineInput = input.next();
-          }
-          
-          //dummy line
-          input.nextLine();
-
-          System.out.println("What is the departures destination? ");
-
-          String destination = input.nextLine();
-          if (destination.length() > 14) {
-            System.out.println(
-                "Destination name can not be longer than 14 characters. Please try again. ");
-            destination = input.nextLine();
-          }
-          
-          System.out.println("When does the train depart? Enter as hh:mm");
-
-          LocalTime validDepartureTime = getValidLocalTime();
-        
-          TrainDeparture trainDeparture = new TrainDeparture(trainNumber,
-               trackNumber, lineInput, destination, validDepartureTime, LocalTime.of(0, 0));  
-          trainRegister.addNewDeparture(trainDeparture);
+          addDeparture();
         }
           break;
         case 2:
-          System.out.println(
-              "What is the train number of the departure you want to remove?");
-          
-          int validTrainnumber = getValidTrainNumber();
-          TrainDeparture wanteDeparture = trainRegister.wantedDeparture(validTrainnumber);
 
-          if (wanteDeparture == null) {
-            System.out.println("\"Could not remove departure as departure by trainnumber" 
-                          + validTrainnumber + " does not exits.");            
-          }
-          trainRegister.removeDeparture(validTrainnumber);
-
-          System.out.println("Departure with train number " + validTrainnumber + " removed.");
-
+          removeDeparture();
+        
           break;
         case 3: { 
-          System.out.println("What departure will you like to grant a track? Enter train number.");
-
-          int trainNumber = getValidTrainNumber();
-
-          System.out.println(
-              "What track will you give this departure? Enter a number between 1-9.");
-
-          int trackNumber = getValidTrackNumber();
-          
-          trainRegister.wantedDeparture(trainNumber)
-              .setTrack(trackNumber);
+          grantTrack();
         }
           break;
-          
+        
         case 4: {
-
-          System.out.println("To which departure do you wish to add a delay? Enter train number.");
-
-          //Checks if input is on format hh:mm
-          int trainNumber = getValidTrainNumber();
+          addDelayToDeparture();
           
-          TrainDeparture currentTrainDeparture = trainRegister.wantedDeparture((trainNumber));
-
-          if (currentTrainDeparture == null) {
-            
-            System.out.println("Could not add delay as departure by trainnumber " 
-                + trainNumber + " does not exits. ");
-          } else {
-            System.out.println("How much of a delay do you want to add? Enter as hh:mm");
-            LocalTime validDelay = getValidLocalTime();
-            currentTrainDeparture.addDelay(validDelay);
-          }
         }
-
           break;  
-
         case 5: { 
-          System.out.println("What is the train number? ");
-           
-          int trainNumber = getValidTrainNumber();
+          wantedDestination();
 
-          //Store the wanted departure as a variable
-          TrainDeparture wantedDeparture = trainRegister
-              .wantedDeparture(trainNumber);
-          //If departure not found, tell user
-          if (wantedDeparture == null) {
-            System.out.println("Departure not found.");          
-          } else { //Print wanted departure in nice style
-            System.out.println("\nWanted departure:");
-            System.out.println(
-                "-------------------------------------------------------------------------\n" 
-                + wantedDeparture.departureToString() 
-                + "\n-------------------------------------------------------------------------\n");
-          }
         }
           break;
         case 6: {
-          System.out.println("Where do you want to go? ");
-          input.nextLine(); 
-      
-          boolean running = true;
-          String destinationInput = "";
+          destinationSearch();
 
-          while (running) {
-            destinationInput = input.nextLine().trim();
-            TrainDeparture[] wantedDepartureList = trainRegister
-              .departuresToWantedDestination(destinationInput);
-         
-            if (wantedDepartureList.length == 0) {
-              System.out.println("No departure by the name of " 
-                  + destinationInput + " found, please try again.");
-            } else {
-              running = false;
-            
-            }
-          }
-          printDepartureFormatStart();
-          
-          Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
-              .forEach(d -> System.out.println(d.departureToString()));
-          System.out.println(
-              "--------------------------------------------------------------------------");
-        
         }
           break;
         case 7: { 
-
-          System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
-        
-          String time;
-          boolean running = true;
-
-          while (running) {
-            
-            time = input.next();
-            
-            if (time.matches("\\d{2}:\\d{2}")) {
-              try {
-                if (Parse.parseStringToLocalTime(time).isBefore(clock)) {
-                  System.out.println("New time must be after current time.");     
-                } else {
-                  clock = Parse.parseStringToLocalTime(time);
-                  running = false;
-                }
-              } catch (DateTimeParseException e) {
-                System.out.println("Hours must be in interval [00-23]" 
-                    + " and minutes must be in interval [00-59]. Please try again.");
-              } 
-            } else {
-              System.out.println("Time must match format hh:mm. Please try again.");
-            }
-            
-          }    
+          updateClock();
+          
         }
           break;
         case 8: 
@@ -343,12 +180,22 @@ public class UserInterface {
     
     input.close();
   }
+  /**.
+   * Method to print format above departure, for visuals.
+   */
 
+  public void printDepartureFormatStart() {
+    System.out.println("\n");
+    System.out.println(
+        "----------------------------------" + clock + "---------------------------------");
+    System.out.println(
+                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
+    System.out.println(
+                "|_______________________________________________________________________|");
+  }
   /**.
    *
-   *
-   * @return parsed and validated int trainNumber.
-   * 
+   * @return parsed and validated int trainNumber. 
    */
   public int getValidTrainNumber() {
     
@@ -363,11 +210,11 @@ public class UserInterface {
     return Integer.parseInt(trainNumberInput);
   }
 
-  /**
-   *
-   * @return input validated and parsed to int.
-   * 
-   */
+  /**.
+  *
+  * @return input validated and parsed to int.
+  *    
+  */
   public int getValidTrackNumber() {
 
     String trackNumberInput = input.next();
@@ -398,7 +245,7 @@ public class UserInterface {
             
       if (localTime.matches("\\d{2}:\\d{2}")) {
         try {
-          validLocalTime = Parse.parseStringToLocalTime(localTime);
+          validLocalTime = Parser.stringToLocalTime(localTime);
           running = false;
         } catch (DateTimeParseException e) {
           System.out.println("Hours must be in interval [00-23]" 
@@ -411,7 +258,206 @@ public class UserInterface {
     }
     return validLocalTime;
   }
- 
+
+  /**.
+  *Takes user input to add new departure.
+  */
+  public void addDeparture() {
+    System.out.println("What is the train number of the new departure? ");
+
+    //Instant feed-back if train number ID is taken
+    int trainNumber = getValidTrainNumber();
+
+    while (trainRegister.wantedDeparture(trainNumber) != null) {
+      System.out.println(
+          "Used train number. Please enter a new train number.");
+      trainNumber = getValidTrainNumber();
+    }
+
+    System.out.println("Which track will the train be arriving at" 
+        + ", if not granted yet, enter 0. ");
+          
+    int trackNumber = getValidTrackNumber();
+          
+    System.out.println("What is the departure`s designated line? ");
+
+    String lineInput = input.next();
+    while (lineInput.length() > 4) {
+      System.out.println(
+          "Line must be 3 characters or shorter, f.ex L11. Please try again");
+      lineInput = input.next();
+    }
+          
+    //dummy line
+    input.nextLine();
+
+    System.out.println("What is the departures destination? ");
+
+    String destination = input.nextLine();
+    if (destination.length() > 14) {
+      System.out.println(
+          "Destination name can not be longer than 14 characters. Please try again. ");
+      destination = input.nextLine();
+    }
+          
+    System.out.println("When does the train depart? Enter as hh:mm");
+
+    LocalTime validDepartureTime = getValidLocalTime();
+        
+    TrainDeparture trainDeparture = new TrainDeparture(trainNumber,
+        trackNumber, lineInput, destination, validDepartureTime, LocalTime.of(0, 0));  
+    trainRegister.addNewDeparture(trainDeparture);
+  }
+
+  /**.
+   *Method for UI to remove departure. 
+   * 
+   */
+  public void removeDeparture() {
+    System.out.println(
+              "What is the train number of the departure you want to remove?");
+          
+    int validTrainnumber = getValidTrainNumber();
+    TrainDeparture wanteDeparture = trainRegister.wantedDeparture(validTrainnumber);
+
+    if (wanteDeparture == null) {
+      System.out.println("\nCould not remove departure as departure by trainnumber " 
+          + validTrainnumber + " does not exits.");            
+    } else {
+      trainRegister.removeDeparture(validTrainnumber);
+      System.out.println("Departure with train number " + validTrainnumber + " removed.");
+    }
+    
+  }
+
+  /**.
+   * Method takes input from user, and adds delay to a departure. 
+   */
+  public void addDelayToDeparture() {
+
+    System.out.println("To which departure do you wish to add a delay? Enter train number.");
+    int trainNumber = getValidTrainNumber();
+          
+    TrainDeparture currentTrainDeparture = trainRegister.wantedDeparture((trainNumber));
+
+    if (currentTrainDeparture == null) {
+            
+      System.out.println("Could not add delay as departure by trainnumber " 
+                + trainNumber + " does not exits. ");
+    } else {
+      System.out.println("How much of a delay do you want to add? Enter as hh:mm");
+      LocalTime validDelay = getValidLocalTime();
+      currentTrainDeparture.addDelay(validDelay);
+    }
+  }
+  /**.
+   *Method takes input from user and adds track to departure.
+   */
+
+  public void grantTrack() {
+
+    System.out.println(
+            "What departure will you like to grant a track? Enter train number.");
+
+    int trainNumber = getValidTrainNumber();
+
+    System.out.println(
+              "What track will you give this departure? Enter a number between 1-9.");
+
+    int trackNumber = getValidTrackNumber();
+          
+    trainRegister.wantedDeparture(trainNumber)
+        .setTrack(trackNumber);
+  }
+  /**.
+   * Prints a wanted departure by train number.
+   */
+
+  public void wantedDestination() {
+    System.out.println("What is the train number? ");
+          
+    int trainNumber = getValidTrainNumber();
+
+          
+    TrainDeparture wantedDeparture = trainRegister
+              .wantedDeparture(trainNumber);
+          
+    if (wantedDeparture == null) {
+      System.out.println("Departure not found.");          
+    } else { 
+      System.out.println("\nWanted departure:");
+      printDepartureFormatStart();
+      System.out.println(
+          "-------------------------------------------------------------------------\n" 
+          + wantedDeparture.departureToString() 
+          + "\n-------------------------------------------------------------------------\n");
+    }
+  }
+  /**.
+   * Prints all departures to input destination.
+   */
+
+  public void destinationSearch() {
+    System.out.println("Where do you want to go? ");
+    input.nextLine(); 
+      
+    boolean running = true;
+    String destinationInput = "";
+
+    while (running) {
+      destinationInput = input.nextLine().trim();
+      TrainDeparture[] wantedDepartureList = trainRegister
+          .departuresToWantedDestination(destinationInput);
+         
+      if (wantedDepartureList.length == 0) {
+        System.out.println("No departure with the destination " 
+            + destinationInput + " found, please try again.");
+      } else {
+        running = false;
+            
+      }
+    }
+    printDepartureFormatStart();
+          
+    Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
+        .forEach(d -> System.out.println(d.departureToString()));
+    System.out.println(
+         "--------------------------------------------------------------------------");
+        
+  }
+  /**.
+   *Method for user to manually update clock.
+   */
+
+  public void updateClock() {
+
+    System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
+        
+    String time;
+    boolean running = true;
+
+    while (running) {
+            
+      time = input.next();
+            
+      if (time.matches("\\d{2}:\\d{2}")) {
+        try {
+          if (Parser.stringToLocalTime(time).isBefore(clock)) {
+            System.out.println("New time must be after current time.");     
+          } else {
+            clock = Parser.stringToLocalTime(time);
+            running = false;
+          }
+        } catch (DateTimeParseException e) {
+          System.out.println("Hours must be in interval [00-23]" 
+              + " and minutes must be in interval [00-59]. Please try again.");
+        } 
+      } else {
+        System.out.println("Time must match format hh:mm. Please try again.");
+      }
+            
+    }    
+  }
 
 }
 
