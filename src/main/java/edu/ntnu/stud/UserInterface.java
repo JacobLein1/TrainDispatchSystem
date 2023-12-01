@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
  */
 public class UserInterface {
    
-  TrainRegister trainRegister = new TrainRegister();
-  LocalTime clock;
-  Scanner input = new Scanner(System.in);
+  private final TrainRegister trainRegister = new TrainRegister();
+  private LocalTime clock;
+  private final Scanner input = new Scanner(System.in);
   
   /**.
    * Method to initalise all pre-set departures.
@@ -32,31 +32,31 @@ public class UserInterface {
     TrainDeparture spikkestad = new TrainDeparture(1, 4, "L11",
          "Spikkestad", LocalTime.of(7, 20), LocalTime.of(0, 0));
     
-    trainRegister.addNewDeparture(spikkestad);
+    trainRegister.addDeparture(spikkestad);
 
     TrainDeparture sandvika = new TrainDeparture(02, 2, "L2",
          "Sandvika", LocalTime.of(9, 45), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(sandvika);
+    trainRegister.addDeparture(sandvika);
 
-    TrainDeparture nedreHovik = new TrainDeparture(03, 0, "L2",
+    TrainDeparture nedreHovik = new TrainDeparture(03, -1, "L2",
          "Nedre Hovik", LocalTime.of(12, 10), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(nedreHovik);
+    trainRegister.addDeparture(nedreHovik);
 
     TrainDeparture bergen = new TrainDeparture(04, 3, "L3",
           "Bergen", LocalTime.of(12, 0), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(bergen);
+    trainRegister.addDeparture(bergen);
 
     TrainDeparture nesodden = new TrainDeparture(11, 1, "L3",
           "Nesodden", LocalTime.of(0, 30), LocalTime.of(0, 4));
-    trainRegister.addNewDeparture(nesodden);
+    trainRegister.addDeparture(nesodden);
 
-    TrainDeparture gardemoen = new TrainDeparture(6, 0, "R1",
+    TrainDeparture gardemoen = new TrainDeparture(6, -1, "R1",
         "Gardemoen", LocalTime.of(15, 10), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(gardemoen);
+    trainRegister.addDeparture(gardemoen);
    
     TrainDeparture ovreHovik = new TrainDeparture(5, 2, "R12",
          "Øvre Høvik", LocalTime.of(18, 00), LocalTime.of(0, 0));
-    trainRegister.addNewDeparture(ovreHovik);
+    trainRegister.addDeparture(ovreHovik);
 
     return trainRegister;
   }
@@ -128,8 +128,6 @@ public class UserInterface {
           userInput = input.next();
       }
       }
-      
-
       switch (choice) {
         case 1: {
           addDeparture();
@@ -218,13 +216,36 @@ public class UserInterface {
   public int getValidTrackNumber() {
 
     String trackNumberInput = input.next();
+    int trackNumber = 0;
+    boolean running = true;
 
-    while (!Pattern.matches("\\d", trackNumberInput) || Integer.parseInt(trackNumberInput) > 9) {
-      System.out.println("Tracknumber must be between 0-9. Please try again.");
-      trackNumberInput = input.next();
+    while (running) {
+      try {
+        trackNumber = Integer.parseInt(trackNumberInput);
+        if (trackNumber < 9 && trackNumber > 0 || trackNumber == -1) {
+          running = false;
+        } else {
+          System.out.println(
+              "Enter a number between 1-9. If track number is not granted yet, enter -1.");
+          trackNumberInput = input.next();
+          
+        }
+      } catch (NumberFormatException nfe) {
+        System.out.println(
+            "Track number must be a number between 1-9. " 
+            + " If track number is not granted yet, enter -1. ");
+        trackNumberInput = input.next();
+        
+      }
+      
     }
 
-    return Integer.parseInt(trackNumberInput);
+    /*while (!Pattern.matches("\\d", trackNumberInput) || Integer.parseInt(trackNumberInput) > 9) {
+      System.out.println("Tracknumber must be between 0-9. Please try again.");
+      trackNumberInput = input.next();
+    }*/
+
+    return trackNumber;
   }
   /**.
    *
@@ -262,7 +283,7 @@ public class UserInterface {
   /**.
   *Takes user input to add new departure.
   */
-  public void addDeparture() {
+  private void addDeparture() {
     System.out.println("What is the train number of the new departure? ");
 
     //Instant feed-back if train number ID is taken
@@ -306,14 +327,14 @@ public class UserInterface {
         
     TrainDeparture trainDeparture = new TrainDeparture(trainNumber,
         trackNumber, lineInput, destination, validDepartureTime, LocalTime.of(0, 0));  
-    trainRegister.addNewDeparture(trainDeparture);
+    trainRegister.addDeparture(trainDeparture);
   }
 
   /**.
    *Method for UI to remove departure. 
    * 
    */
-  public void removeDeparture() {
+  private void removeDeparture() {
     System.out.println(
               "What is the train number of the departure you want to remove?");
           
@@ -333,7 +354,7 @@ public class UserInterface {
   /**.
    * Method takes input from user, and adds delay to a departure. 
    */
-  public void addDelayToDeparture() {
+  private void addDelayToDeparture() {
 
     System.out.println("To which departure do you wish to add a delay? Enter train number.");
     int trainNumber = getValidTrainNumber();
@@ -357,12 +378,13 @@ public class UserInterface {
   public void grantTrack() {
 
     System.out.println(
-            "What departure will you like to grant a track? Enter train number.");
+            "What departure would you like to grant a track? Enter train number.");
 
     int trainNumber = getValidTrainNumber();
 
     System.out.println(
-              "What track will you give this departure? Enter a number between 1-9.");
+              "What track will you give this departure? " 
+              + "Enter a number between 1-9. If track is not yet granted enter 0. ");
 
     int trackNumber = getValidTrackNumber();
           
@@ -373,7 +395,7 @@ public class UserInterface {
    * Prints a wanted departure by train number.
    */
 
-  public void wantedDestination() {
+  private void wantedDestination() {
     System.out.println("What is the train number? ");
           
     int trainNumber = getValidTrainNumber();
@@ -397,7 +419,7 @@ public class UserInterface {
    * Prints all departures to input destination.
    */
 
-  public void destinationSearch() {
+  private void destinationSearch() {
     System.out.println("Where do you want to go? ");
     input.nextLine(); 
       
@@ -429,10 +451,10 @@ public class UserInterface {
    *Method for user to manually update clock.
    */
 
-  public void updateClock() {
+  private void updateClock() {
 
     System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
-        
+    
     String time;
     boolean running = true;
 
