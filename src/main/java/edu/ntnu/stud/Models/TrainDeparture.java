@@ -1,4 +1,4 @@
-package edu.ntnu.stud.Models;
+package edu.ntnu.stud.models;
 
 import java.time.LocalTime;
 
@@ -27,14 +27,11 @@ public class TrainDeparture {        //Information regarding train departure
   */
   public TrainDeparture(int trainNumber, int track, String line, 
       String destination, LocalTime departureTime, LocalTime delay) {
-    if (trainNumber < 0) {
-      throw new IllegalArgumentException("Train number must be positive. ");
+    if (trainNumber < 0 || trainNumber > 99) {
+      throw new IllegalArgumentException("Train number must be positive. Between [0-99]");
     }
-    if (track < 0) {
-      throw new IllegalArgumentException("Track must be a positive number. ");
-    }
-    if (line.equals(" ") || line.equals("")) {
-      throw new IllegalArgumentException("Destination has to be an input. ");
+    if (line.equals(" ") || line.equals("") || line.length() > 3) {
+      throw new IllegalArgumentException("Line has to be an input. With max length of 3 symbols.");
     }
     if (destination.equals(" ") || destination.equals("")) {
       throw new IllegalArgumentException("Destination has to be an input. ");
@@ -42,13 +39,12 @@ public class TrainDeparture {        //Information regarding train departure
     if (departureTime == null) {
       throw new IllegalArgumentException("Must add a departure time. ");
     }
-    if (track == 0) {
-      track = -1;
-    }
+    
+
     //også hvis den er tom, 0, mellomrom, String
 
     this.trainNumber = trainNumber;
-    this.track = track;
+    setTrack(track);
     this.line = line;
     this.destination = destination;
     this.departureTime = departureTime;
@@ -84,9 +80,11 @@ public class TrainDeparture {        //Information regarding train departure
 
   //Setter-methods
 
-  public void setTrack(int newTrack) {  //Set a new track a train will arrive at
-    
-    track = newTrack;
+  public void setTrack(int inputTrack) {  //Set a new track a train will arrive at
+    if (inputTrack < 0 && inputTrack != -1) {
+      throw new IllegalArgumentException("Track number must be positive.");      
+    }
+    track = inputTrack;
   }
   
   //set a new departure time in case of a delay
@@ -150,16 +148,16 @@ public class TrainDeparture {        //Information regarding train departure
 
     String result = "";
 
-    result += String.format("|      %4s          %2s       %2d      %14s",
+    result += String.format("| %10s %12s %8d %18s",
      departureTime.toString(), line, trainNumber, destination);
 
     if (track != -1) {
-      result += String.format("      %2d", track);
+      result += String.format("%8d", track);
     } else {
       result += "        ";
     }
     if (delay != LocalTime.of(00, 00)) {
-      result += String.format("      %5s", delay);     
+      result += String.format("%11s", delay);     
     } else {
       result += "           ";
     }
