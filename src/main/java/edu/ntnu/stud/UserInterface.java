@@ -3,7 +3,6 @@ package edu.ntnu.stud;
 import edu.ntnu.stud.Utils.Parser;
 import edu.ntnu.stud.models.TrainDeparture;
 import edu.ntnu.stud.models.TrainRegister;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public class UserInterface {
   private final Scanner input = new Scanner(System.in);
   
   /**.
-   * Method to initalise all pre-set departures.
+   * Initalise all pre-set example departures.
    */
 
   public TrainRegister init() {
@@ -61,32 +60,6 @@ public class UserInterface {
     return trainRegister;
   }
 
-
-  //Start to possible solution to make prettier code, method with only function to handle user
-  //inputs and give resulting output
-  /* public static <T> T askUser(String question, String returnDatatype) {
-    Scanner input = new Scanner(System.in);
-    System.out.println(question);
-
-    String userInput = input.nextLine();
-    T result;
-
-    switch (returnDatatype) {
-      case "Int":
-        result = Integer.parseInt(userInput);
-        break;
-      
-      case "LocalTime":
-      
-        break;
-      default:
-        break;
-    }
-    input.close();
-    }
-
-  ///<Integer>askUser("what is that", "Int"); */
-
   /**.
    * Starts up the menu.
    */
@@ -94,7 +67,7 @@ public class UserInterface {
     
     int choice = 0;
 
-    while (choice != 8) {
+    while (choice != 6) {
       trainRegister.departuresAfterTime(clock);
 
       printDepartureFormatStart();
@@ -103,28 +76,16 @@ public class UserInterface {
       System.out.println(
           "-------------------------------------------------------------------------");    
 
-      System.out.println("What would you like to do? Choose an option between 1-9.");
+      System.out.println("What would you like to do? Choose an option between 1-6.");
       System.out.println("1. Add new train departure.");
       System.out.println("2. Remove departure");
       System.out.println("3. Find specific departure by train number. ");
       System.out.println("4. Find departures by destination.");
       System.out.println("5. Update clock. ");
       System.out.println("6. Exit menu. ");
-      
-      String userInput = input.next();
-      boolean validating = true;
 
-      while (validating) {
+      choice = menuInput(6);
 
-        try {
-          choice = Integer.parseInt(userInput);
-          validating = false;
-        } catch (NumberFormatException nfe) {
-          System.out.println("You must enter a number. Between 1-6.");
-      
-          userInput = input.next();
-      }
-      }
       switch (choice) {
         case 1: {
           addDeparture();
@@ -150,11 +111,10 @@ public class UserInterface {
         }
           break;
         case 6: 
-
           System.out.println("Exiting...");
           break;
         default:
-          System.out.println("You must write a number between 1-8. ");
+          System.out.println("You must enter a number between 1-6. ");
           break;
         
       } 
@@ -169,11 +129,11 @@ public class UserInterface {
    */
 
   public void printDepartureFormatStart() {
-    System.out.println("\n");
+    
     System.out.println(
-        "----------------------------------" + clock + "---------------------------------");
+        "\n----------------------------------" + clock + "---------------------------------");
     System.out.println(
-                "|  Departure Time    Line  Train number    Destination   Track    Delay |");
+                "|  Departure Time    Line  Train number    Destination    Delay   Track |");
     System.out.println(
                 "|_______________________________________________________________________|");
   }
@@ -201,7 +161,7 @@ public class UserInterface {
   *    
   */
   public int getValidTrackNumber() {
-
+    
     String trackNumberInput = input.next();
     int trackNumber = 0;
     boolean running = true;
@@ -280,7 +240,7 @@ public class UserInterface {
     System.out.println("Which track will the train be arriving at" 
         + ", if not granted yet, enter -1. ");
           
-    int trackNumber = getValidTrackNumber();
+    final int trackNumber = getValidTrackNumber();
           
     System.out.println("What is the departure`s designated line? ");
 
@@ -343,7 +303,7 @@ public class UserInterface {
       System.out.println("\nCould not find departure as departure by departure number " 
           + trainNumber + " does not exist.");     
     } else {
-       System.out.println(
+      System.out.println(
               "What track will you give this departure? " 
               + "Enter a number between 1-9. If track is not yet granted enter -1. ");
       int trackNumber = getValidTrackNumber();
@@ -385,7 +345,7 @@ public class UserInterface {
               .wantedDeparture(trainNumber);
           
     if (wantedDeparture == null) {
-      System.out.println("Departure not found.");          
+      System.out.println("\nDeparture not found.");          
     } else { 
       System.out.println("\nWanted departure:");
       printDepartureFormatStart();
@@ -395,40 +355,38 @@ public class UserInterface {
           + "\n-------------------------------------------------------------------------\n");
       
       
-      System.out.println("What would you like to do to this departure? ");
-      System.out.println("1. Grant departure a track. ");
-      System.out.println("2. Add delay to this departure. ");   
-      System.out.println("3. Return to main menu.");   
-      String userInput = input.next();
-      boolean validating = true;
+        
+      
       int choice = 0;
 
-      while (validating) {
+      while (choice != 3) {
 
-        try {
-          choice = Integer.parseInt(userInput);
-          validating = false;
-        } catch (NumberFormatException nfe) {
-          System.out.println("You must enter a number. Either 1 or 2.");
-      
-          userInput = input.next();
+        System.out.println("What would you like to do to this departure? ");
+        System.out.println("1. Grant departure a track. ");
+        System.out.println("2. Add delay to this departure. ");   
+        System.out.println("3. Return to main menu.");
+
+        choice = menuInput(3);
+
+        switch (choice) {
+          case 1:
+            grantTrack(trainNumber);
+            System.out.println("\nTrack granted. ");
+            break;
+          case 2: 
+            addDelayToDeparture(trainNumber);
+            System.out.println("\nDelay updated. ");
+            break;
+          case 3:
+            System.out.println("\nReturning to main menu.");
+            break;
+          default:
+            System.out.println("\nThe number must be between 1-3. ");
+            break;
         }
-        
+      
       }
-      switch (choice) {
-        case 1:
-          grantTrack(trainNumber);
-          break;
-        case 2: 
-          addDelayToDeparture(trainNumber);
-          break;
-        case 3:
-          System.out.println("Returning to main menu.");
-          break;
-        default:
-          System.out.println("The number must be either 1 or 2. ");
-          break;
-      }
+      
     }
   }
   /**.
@@ -455,12 +413,14 @@ public class UserInterface {
             
       }
     }
+    System.out.println("Wanted departure: ");
     printDepartureFormatStart();
           
     Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
         .forEach(d -> System.out.println(d.departureToString()));
     System.out.println(
          "--------------------------------------------------------------------------");
+    
         
   }
   /**.
@@ -496,6 +456,31 @@ public class UserInterface {
             
     }    
   }
+  /**.
+   *
+   * @param amountChoices how many choices the user will be given in a menu.
+   * @return user choice parsed and validated.
+   * 
+   */
 
+  public int menuInput(int amountChoices) {
+    String userInput = input.next();
+    boolean validating = true;
+    int userchoice = 0;
+
+    while (validating) {
+
+      try {
+        userchoice = Integer.parseInt(userInput);
+        validating = false;
+      } catch (NumberFormatException nfe) {
+        System.out.println("You must enter a number. Between 1 and " + amountChoices);
+      
+        userInput = input.next();
+      }
+        
+    } 
+    return userchoice;
+  }
 }
 
