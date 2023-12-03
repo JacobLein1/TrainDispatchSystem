@@ -79,7 +79,11 @@ public class TrainDeparture {        //Information regarding train departure
   }
 
   //Setter-methods
-
+  /**.
+   *
+   * @param inputTrack new track for departure.
+   * 
+   */
   public void setTrack(int inputTrack) {  //Set a new track a train will arrive at
     if (inputTrack < 0 && inputTrack != -1) {
       throw new IllegalArgumentException("Track number must be positive.");      
@@ -115,7 +119,7 @@ public class TrainDeparture {        //Information regarding train departure
   }
 
   public boolean hasDelay() {
-    return this.delay != LocalTime.parse("00:00");
+    return getDelay() != LocalTime.parse("00:00");
   } 
   /**.
    *
@@ -150,18 +154,19 @@ public class TrainDeparture {        //Information regarding train departure
 
     result += String.format("| %10s %12s %8d %18s",
      departureTime.toString(), line, trainNumber, destination);
-
+     
+    if (hasDelay()) {
+      result += String.format("%9s", delay);     
+    } else {
+      result += "         ";
+    }
     if (track != -1) {
       result += String.format("%8d", track);
     } else {
       result += "        ";
     }
-    if (delay != LocalTime.of(00, 00)) {
-      result += String.format("%11s", delay);     
-    } else {
-      result += "           ";
-    }
-    result += "|"; 
+    
+    result += "  |"; 
     return result;
   }
 }
