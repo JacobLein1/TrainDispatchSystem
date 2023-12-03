@@ -1,13 +1,10 @@
-package edu.ntnu.stud.Models;
+package edu.ntnu.stud.models;
 
 import java.time.LocalTime;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.stream.Collectors;
 
-import edu.ntnu.stud.UserInterface;
 
 
 
@@ -17,7 +14,7 @@ import edu.ntnu.stud.UserInterface;
  * 
  * <p>As well as the methods: 
  * 
- * <p>addNewTrainDeparture
+ * <p>addTrainDeparture
  * checkDuplicate
  * wantedDeparture
  * getListOfDepartures
@@ -34,14 +31,14 @@ public class TrainRegister {
    * Add new train departure method
    */
 
-  public void addNewDeparture(TrainDeparture newTrainDeparture) {
+  public void addDeparture(TrainDeparture newDeparture) {
 
-    if (checkDuplicate(newTrainDeparture)) {
+    if (checkDuplicate(newDeparture)) {
 
       throw new IllegalArgumentException("Duplicate found!");
 
     } else {
-      departureList.add(newTrainDeparture);
+      departureList.add(newDeparture);
     }
   }
   /**.
@@ -52,7 +49,7 @@ public class TrainRegister {
 
   public void removeDeparture(int trainNumber) {
 
-    departureList = departureList.stream().filter(d -> d.getTrainNumber() == trainNumber)
+    departureList = departureList.stream().filter(d -> d.getTrainNumber() != trainNumber)
       .collect(Collectors.toCollection(ArrayList::new));
   }
 
@@ -72,7 +69,7 @@ public class TrainRegister {
 
   /**.
   *
-  *@param trainnumber the wanted trainnumber
+  *@param trainNumber the wanted trainnumber
   *
   *@return found departures of the right trainNumber
   */
@@ -121,13 +118,12 @@ public class TrainRegister {
   
   public void departuresAfterTime(LocalTime currentTime) {
     departureList = departureList.stream()
-    .filter(d -> d.departureTimeAfterDelay(d).isAfter(currentTime))
+    .filter(d -> d.departureTimeAfterDelay(d).compareTo(currentTime) >= 0)
     .collect(Collectors.toCollection(ArrayList::new));
   }
   /**.
   *
   * @return a sorted list of departures by departure time without regarding delay.
-  * https://www.geeksforgeeks.org/how-to-sort-an-arraylist-of-objects-by-property-in-java/ Link
   used to make this method
   */
 
@@ -136,7 +132,6 @@ public class TrainRegister {
     return departureList.stream().sorted((d1, d2) -> 
     d1.getDepartureTime().compareTo(d2.getDepartureTime()))
     .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
-     
   }
 
   /**.
