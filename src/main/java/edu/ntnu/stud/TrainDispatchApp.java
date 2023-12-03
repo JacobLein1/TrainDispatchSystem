@@ -1,7 +1,5 @@
 package edu.ntnu.stud;
 
-import edu.ntnu.stud.models.TrainRegister;
-
 /**
  * This is the main class for the train dispatch application.
  */
