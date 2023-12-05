@@ -109,6 +109,7 @@ public class TrainDeparture {        //Information regarding train departure
     delay = delay.plusMinutes(addedDelayTime.getMinute());
     delay = delay.plusHours(addedDelayTime.getHour());  
     
+    
   }
   //method to check if trainnumber already exists
 
@@ -128,7 +129,6 @@ public class TrainDeparture {        //Information regarding train departure
     if (hasDelay()) {
 
       return getDepartureTime().plusHours(getDelay().getHour()).plusMinutes(getDelay().getMinute());
-
     } else {
       return departureTime;
     }
