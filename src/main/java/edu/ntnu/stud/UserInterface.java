@@ -375,7 +375,7 @@ public class UserInterface {
 
     LocalTime validDelay = getValidLocalTime(); 
 
-
+    //Departure time after with addition of delay.
     LocalTime newDepartureTime = currentTrainDeparture.departureTimeAfterDelay()
           .plusHours(validDelay.getHour())
           .plusMinutes(validDelay.getMinute());
