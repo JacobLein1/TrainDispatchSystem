@@ -165,7 +165,7 @@ public class TestTrainRegister {
   @Test
   public void testDepartureToString() {
 
-    TrainDeparture haslum = new TrainDeparture(3, 15, "L2", "Haslum",
+    TrainDeparture haslum = new TrainDeparture(3, 9, "L2", "Haslum",
         LocalTime.of(23, 40), LocalTime.of(0, 0));
     TrainDeparture oslo = new TrainDeparture(1, 0, "L3", "Oslo",
         LocalTime.of(22, 28), LocalTime.of(0, 1));
@@ -181,30 +181,30 @@ public class TestTrainRegister {
 
     Printer.printDepartureListStart();
 
-    System.out.println(haslum.departureToString());
-    System.out.println(oslo.departureToString());
-    System.out.println(asker.departureToString());
-    System.out.println(bergen.departureToString());
+    System.out.println(haslum);
+    System.out.println(oslo);
+    System.out.println(asker);
+    System.out.println(bergen);
 
   
     
-    System.out.println(testRegister.sortedDepartureList());
+    testRegister.printSortedList();
 
     String haslumExpected =
-        "|      23:40           L2        3             Haslum               15  |"; 
-    assertEquals(haslumExpected, haslum.departureToString());
-    
+        "|      23:40           L2        3             Haslum                9  |"; 
+    assertEquals(haslumExpected, haslum.toString());
+
     String osloExpected = 
         "|      22:28           L3        1               Oslo    00:01       0  |";
-    assertEquals(osloExpected, oslo.departureToString());
+    assertEquals(osloExpected, oslo.toString());
 
     String askerExpected =
         "|      22:28           L3        2              Asker    00:03       1  |";
-    assertEquals(askerExpected, asker.departureToString());
+    assertEquals(askerExpected, asker.toString());
 
     String bergenExpected = 
         "|      22:28           L3        4             Bergen                0  |";
-    assertEquals(bergenExpected, bergen.departureToString());
+    assertEquals(bergenExpected, bergen.toString());
     
     
     
