@@ -118,7 +118,7 @@ public class TrainRegister {
   
   public void departuresAfterTime(LocalTime currentTime) {
     departureList = departureList.stream()
-    .filter(d -> d.departureTimeAfterDelay(d).compareTo(currentTime) >= 0)
+    .filter(d -> d.departureTimeAfterDelay().compareTo(currentTime) >= 0)
     .collect(Collectors.toCollection(ArrayList::new));
   }
   /**.
@@ -146,6 +146,6 @@ public class TrainRegister {
     System.out.println("|  Departure Time    Line  Train number    Destination   Track    Delay |");
     System.out.println("|_______________________________________________________________________|");
     Arrays.stream(sortedDepartureList())
-        .forEach(d -> System.out.println(d.departureToString()));
+        .forEach(d -> System.out.println(d));
   }
 }
