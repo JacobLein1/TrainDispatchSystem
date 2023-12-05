@@ -27,10 +27,9 @@ public class UserInterface {
     System.out.println("Initialising...");  
 
     clock = LocalTime.of(0, 0);
-    
+    System.out.println(1);
     TrainDeparture spikkestad = new TrainDeparture(1, 4, "L11",
          "Spikkestad", LocalTime.of(7, 20), LocalTime.of(0, 0));
-    
     trainRegister.addDeparture(spikkestad);
 
     TrainDeparture sandvika = new TrainDeparture(02, 2, "L2",
@@ -54,7 +53,7 @@ public class UserInterface {
     trainRegister.addDeparture(gardemoen);
    
     TrainDeparture ovreHovik = new TrainDeparture(5, 2, "R12",
-         "Øvre Høvik", LocalTime.of(18, 00), LocalTime.of(0, 0));
+         "Øvre Høvik", LocalTime.of(23, 59), LocalTime.of(0, 0));
     trainRegister.addDeparture(ovreHovik);
 
     return trainRegister;
@@ -69,10 +68,9 @@ public class UserInterface {
 
     while (choice != 6) {
       trainRegister.departuresAfterTime(clock);
-
       printDepartureFormatStart();
       Arrays.stream(trainRegister.sortedDepartureList())
-          .forEach(d -> System.out.println(d.departureToString()));
+          .forEach(d -> System.out.println(d));
       System.out.println(
           "-------------------------------------------------------------------------");    
 
@@ -87,28 +85,25 @@ public class UserInterface {
       choice = menuInput(6);
 
       switch (choice) {
-        case 1: {
+        case 1: 
           addDeparture();
-        }
+        
           break;
         case 2:
           removeDeparture();
         
           break;
-        case 3: { 
+        case 3: 
           searchDepartures();
 
-        }
           break;
-        case 4: {
+        case 4: 
           destinationSearch();
 
-        }
           break;
-        case 5: { 
+        case 5:
           updateClock();
           
-        }
           break;
         case 6: 
           System.out.println("Exiting...");
@@ -217,7 +212,7 @@ public class UserInterface {
       } else {
         System.out.println("Time must match format hh:mm. Please try again.");
       }
-            
+
     }
     return validLocalTime;
   }
@@ -228,7 +223,6 @@ public class UserInterface {
   private void addDeparture() {
     System.out.println("What is the train number of the new departure? ");
 
-    //Instant feed-back if train number ID is taken
     int trainNumber = getValidTrainNumber();
 
     while (trainRegister.wantedDeparture(trainNumber) != null) {
@@ -312,26 +306,6 @@ public class UserInterface {
     }
   }
   /**.
-   * Method takes input from user, and adds delay to a departure. 
-   */
-
-  private void addDelayToDeparture(int trainNumber) {
-
-          
-    TrainDeparture currentTrainDeparture = trainRegister.wantedDeparture((trainNumber));
-
-    if (currentTrainDeparture == null) {
-            
-      System.out.println("Could not add delay as departure by trainnumber " 
-                + trainNumber + " does not exits. ");
-    } else {
-      System.out.println("How much of a delay do you want to add? Enter as hh:mm");
-      LocalTime validDelay = getValidLocalTime();
-      currentTrainDeparture.addDelay(validDelay);
-    }
-  }
- 
-  /**.
    * Prints a wanted departure by train number.
    */
 
@@ -351,7 +325,7 @@ public class UserInterface {
       printDepartureFormatStart();
       System.out.println(
           "-------------------------------------------------------------------------\n" 
-          + wantedDeparture.departureToString() 
+          + wantedDeparture 
           + "\n-------------------------------------------------------------------------\n");
       
       
@@ -375,7 +349,6 @@ public class UserInterface {
             break;
           case 2: 
             addDelayToDeparture(trainNumber);
-            System.out.println("\nDelay updated. ");
             break;
           case 3:
             System.out.println("\nReturning to main menu.");
@@ -389,6 +362,42 @@ public class UserInterface {
       
     }
   }
+  /**.
+   * Method takes input from user, and adds delay to a departure. 
+   */
+
+  private void addDelayToDeparture(int trainNumber) {
+          
+    TrainDeparture currentTrainDeparture = trainRegister.wantedDeparture((trainNumber));
+    System.out.println(
+          "How much of a delay do you want to add? Enter as hh:mm, " 
+          + "enter 00:00 if no delay shall be added.");
+
+    LocalTime validDelay = getValidLocalTime(); 
+
+
+    LocalTime newDepartureTime = currentTrainDeparture.departureTimeAfterDelay()
+          .plusHours(validDelay.getHour())
+          .plusMinutes(validDelay.getMinute());
+
+    //Checks if the departure time after delay addition, exceedes midnight/next day.
+    if (newDepartureTime.isBefore(currentTrainDeparture
+          .departureTimeAfterDelay())) {
+      System.out.println(
+          "\nCould not add delay as departure time will exceed midnight. Please try again.\n");
+      
+    } else {
+      if  (validDelay.equals((LocalTime.of(0, 0)))) {
+        System.out.println("No delay added.\n");
+      } else {
+        currentTrainDeparture.addDelay(validDelay);
+        System.out.println("Delay succesfully added.\n");
+      }
+    } 
+      
+  }
+ 
+ 
   /**.
    * Prints all departures to input destination.
    */
@@ -417,7 +426,7 @@ public class UserInterface {
     printDepartureFormatStart();
           
     Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
-        .forEach(d -> System.out.println(d.departureToString()));
+        .forEach(d -> System.out.println(d));
     System.out.println(
          "--------------------------------------------------------------------------");
     
