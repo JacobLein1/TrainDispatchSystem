@@ -4,18 +4,17 @@ package edu.ntnu.stud;
  * This is the main class for the train dispatch application.
  */
 public class TrainDispatchApp {
-  // TODO: Fill in the main method and any other methods you need.
 
   /**.
    * Main method
    * 
    */
   public static void main(String[] args) {
-    UserInterface t1 = new UserInterface();
+    UserInterface ui = new UserInterface();
     
-    t1.init();
+    ui.init();
 
-    t1.start();
+    ui.start();
 
    
   }
