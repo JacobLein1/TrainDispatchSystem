@@ -19,7 +19,7 @@ public class TrainDeparture {        //Information regarding train departure
   private int track;              //"Spor på norsk"
   private final String line;      //"Linje på norsk, f.ex L1"
   private final String destination;
-  private LocalTime departureTime;
+  private final LocalTime departureTime;
   private LocalTime delay;
 
   /**.
@@ -48,7 +48,7 @@ public class TrainDeparture {        //Information regarding train departure
     this.line = line;
     this.destination = destination;
     this.departureTime = departureTime;
-    this.delay = delay;
+    setDelay(delay);
 
   }
   
@@ -84,19 +84,17 @@ public class TrainDeparture {        //Information regarding train departure
    * @param inputTrack new track for departure.
    * 
    */
-  public void setTrack(int inputTrack) {  //Set a new track a train will arrive at
-    if (inputTrack < 0 && inputTrack != -1) {
+  public void setTrack(int inputTrack) 
+      throws IllegalArgumentException {  //Set a new track a train will arrive at
+    if (inputTrack < 0 && inputTrack != -1 || inputTrack > 9) {
       throw new IllegalArgumentException("Track number must be positive.");      
     }
     track = inputTrack;
   }
   
-  //set a new departure time in case of a delay
-  public void setDepartureTime(LocalTime newDepartureTime) {        
-  
-    departureTime = newDepartureTime;
+  private void setDelay(LocalTime delay) {
+    this.delay = delay;
   }
-  
   /**
  * Adds hours and minutes to the original delay.
  *
@@ -106,10 +104,10 @@ public class TrainDeparture {        //Information regarding train departure
  */
 
   //Set delay function, but adds instead. 
-  public void addDelay(LocalTime addedDelayTime) {    
-
+  public void addDelay(LocalTime addedDelayTime) {
+      
     delay = delay.plusMinutes(addedDelayTime.getMinute());
-    delay = delay.plusHours(addedDelayTime.getHour());
+    delay = delay.plusHours(addedDelayTime.getHour());  
     
   }
   //method to check if trainnumber already exists
@@ -123,22 +121,16 @@ public class TrainDeparture {        //Information regarding train departure
   } 
   /**.
    *
-   * @param trainDeparture Departure that is wanted to be updated. 
    * @return The departures time after delay
    */
 
-  public LocalTime departureTimeAfterDelay(TrainDeparture trainDeparture) {
-    if (trainDeparture.hasDelay()) {
+  public LocalTime departureTimeAfterDelay() {
+    if (hasDelay()) {
 
-      int newHourOfDeparture = trainDeparture.departureTime
-          .getHour() + trainDeparture.delay.getHour();
+      return getDepartureTime().plusHours(getDelay().getHour()).plusMinutes(getDelay().getMinute());
 
-      int newMinuteOfDeparture = trainDeparture.departureTime
-          .getMinute() + trainDeparture.delay.getMinute();
-          
-      return LocalTime.of(newHourOfDeparture, newMinuteOfDeparture); 
     } else {
-      return trainDeparture.departureTime;
+      return departureTime;
     }
 
   
@@ -147,8 +139,8 @@ public class TrainDeparture {        //Information regarding train departure
    *
    *@return A departure returned as a string, withoout irrelevant information.
    */
-
-  public String departureToString() {
+  
+  public String toString() {
 
     String result = "";
 
