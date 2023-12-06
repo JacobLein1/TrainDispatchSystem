@@ -26,7 +26,6 @@ public class TrainRegister {
   
 
   private ArrayList<TrainDeparture> departureList = new ArrayList<>();
-  private static LocalTime clock = LocalTime.of(0, 0);
   /**.
    * Add new train departure method
    */
@@ -102,7 +101,7 @@ public class TrainRegister {
   *
   * @return found departures to the wanted destination
   */
-  public TrainDeparture[] departuresToWantedDestination(String wantedDestination) {
+  public TrainDeparture[] searchByDestination(String wantedDestination) {
     return departureList
       .stream()
       .filter(d -> d.getDestination().equalsIgnoreCase(wantedDestination))
@@ -118,7 +117,7 @@ public class TrainRegister {
   
   public void departuresAfterTime(LocalTime currentTime) {
     departureList = departureList.stream()
-    .filter(d -> d.departureTimeAfterDelay().compareTo(currentTime) >= 0)
+    .filter(d -> d.actualDepartureTime().compareTo(currentTime) >= 0)
     .collect(Collectors.toCollection(ArrayList::new));
   }
   /**.
@@ -134,18 +133,4 @@ public class TrainRegister {
     .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
   }
 
-  /**.
-   * Method to print the trainregister sorted by departure time.
-   * 
-   */
-  public void printSortedList() {
-    
-    System.out.println("\n");
-    System.out.println(
-        "----------------------------------" + clock + "---------------------------------");
-    System.out.println("|  Departure Time    Line  Train number    Destination   Track    Delay |");
-    System.out.println("|_______________________________________________________________________|");
-    Arrays.stream(sortedDepartureList())
-        .forEach(d -> System.out.println(d));
-  }
 }
