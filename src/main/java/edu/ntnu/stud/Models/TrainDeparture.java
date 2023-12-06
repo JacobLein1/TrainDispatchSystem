@@ -33,8 +33,8 @@ public class TrainDeparture {        //Information regarding train departure
     if (line.equals(" ") || line.equals("") || line.length() > 3) {
       throw new IllegalArgumentException("Line has to be an input. With max length of 3 symbols.");
     }
-    if (destination.equals(" ") || destination.equals("")) {
-      throw new IllegalArgumentException("Destination has to be an input. ");
+    if (destination.equals(" ") || destination.equals("") || destination.length() > 14) {
+      throw new IllegalArgumentException("Destination has to be an input under 14 characters. ");
     } 
     if (departureTime == null) {
       throw new IllegalArgumentException("Must add a departure time. ");
@@ -98,21 +98,21 @@ public class TrainDeparture {        //Information regarding train departure
   /**
  * Adds hours and minutes to the original delay.
  *
- * @param addedDelayTime Amount of delay.
+ * @param delayTime Amount of delay.
  *                      Should be in the format of {@code LocalTime}.
  *                      It represents both hours and minutes to be added.
  */
 
   //Set delay function, but adds instead. 
-  public void addDelay(LocalTime addedDelayTime) {
+  public void addDelay(LocalTime delayTime) {
       
-    delay = delay.plusMinutes(addedDelayTime.getMinute());
-    delay = delay.plusHours(addedDelayTime.getHour());  
+    delay = delay.plusMinutes(delayTime.getMinute());
+    delay = delay.plusHours(delayTime.getHour());  
     
     
   }
-  //method to check if trainnumber already exists
 
+  //method to check if trainnumber already exists
   public int compareTo(TrainDeparture otherDeparture) {
     return Integer.compare(this.getTrainNumber(), otherDeparture.getTrainNumber());
   }
@@ -122,18 +122,11 @@ public class TrainDeparture {        //Information regarding train departure
   } 
   /**.
    *
-   * @return The departures time after delay
+   * @return The departure's time after delay is added.
    */
 
-  public LocalTime departureTimeAfterDelay() {
-    if (hasDelay()) {
-
-      return getDepartureTime().plusHours(getDelay().getHour()).plusMinutes(getDelay().getMinute());
-    } else {
-      return departureTime;
-    }
-
-  
+  public LocalTime actualDepartureTime() {
+    return getDepartureTime().plusHours(getDelay().getHour()).plusMinutes(getDelay().getMinute());
   }
   /**.
    *
