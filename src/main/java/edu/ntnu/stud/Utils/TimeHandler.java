@@ -1,4 +1,4 @@
-package edu.ntnu.stud.utils;
+package edu.ntnu.stud.Utils;
 
 import java.time.LocalTime;
 
@@ -28,10 +28,19 @@ public class TimeHandler {
   */
 
   public static LocalTime stringToLocalTime(String time) {    
+    LocalTime timeParsed = LocalTime.of(0, 0);
+
     if (time.equals("")) {
       throw new IllegalArgumentException("You must enter a time, try again.");
     } else {
-      return LocalTime.parse(time);
+
+      try {
+        timeParsed = LocalTime.parse(time);
+      } catch (java.time.DateTimeException dte) {
+        System.out.println("Time in wrong format. ");
+        throw dte;
+      }
     }
+    return timeParsed;
   }
 }

@@ -1,8 +1,10 @@
 package edu.ntnu.stud;
 
-import edu.ntnu.stud.Utils.Parser;
+import edu.ntnu.stud.Utils.TimeHandler;
 import edu.ntnu.stud.models.TrainDeparture;
 import edu.ntnu.stud.models.TrainRegister;
+
+import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
@@ -16,8 +18,8 @@ import java.util.regex.Pattern;
 public class UserInterface {
    
   private final TrainRegister trainRegister = new TrainRegister();
-  private LocalTime clock;
-  private final Scanner input = new Scanner(System.in);
+  TimeHandler clock = new TimeHandler(LocalTime.of(0, 0));
+  private static final Scanner input = new Scanner(System.in);
   
   /**.
    * Initalise all pre-set example departures.
@@ -26,8 +28,7 @@ public class UserInterface {
   public TrainRegister init() {
     System.out.println("Initialising...");  
 
-    clock = LocalTime.of(0, 0);
-    System.out.println(1);
+    
     TrainDeparture spikkestad = new TrainDeparture(1, 4, "L11",
          "Spikkestad", LocalTime.of(7, 20), LocalTime.of(0, 0));
     trainRegister.addDeparture(spikkestad);
@@ -67,7 +68,7 @@ public class UserInterface {
     int choice = 0;
 
     while (choice != 6) {
-      trainRegister.departuresAfterTime(clock);
+      trainRegister.departuresAfterTime(clock.getCurrentTime());
       printDepartureFormatStart();
       Arrays.stream(trainRegister.sortedDepartureList())
           .forEach(d -> System.out.println(d));
@@ -119,14 +120,43 @@ public class UserInterface {
     
     input.close();
   }
+   
+  /**.
+   *
+   * @param amountChoices how many choices the user will be given in a menu.
+   * @return user choice parsed and validated.
+   * 
+   */
+
+  private int menuInput(int amountChoices) {
+    String userInput = input.next();
+    boolean validating = true;
+    int userchoice = 0;
+
+    while (validating) {
+
+      try {
+        userchoice = Integer.parseInt(userInput);
+        validating = false;
+      } catch (NumberFormatException nfe) {
+        System.out.println("You must enter a number. Between 1 and " + amountChoices);
+      
+        userInput = input.next();
+      }
+        
+    } 
+    return userchoice;
+  }
+
   /**.
    * Method to print format above departure, for visuals.
    */
 
-  public void printDepartureFormatStart() {
+  private void printDepartureFormatStart() {
     
     System.out.println(
-        "\n----------------------------------" + clock + "---------------------------------");
+        "\n----------------------------------" 
+        + clock.getCurrentTime() + "---------------------------------");
     System.out.println(
                 "|  Departure Time    Line  Train number    Destination    Delay   Track |");
     System.out.println(
@@ -137,7 +167,7 @@ public class UserInterface {
    * @return parsed and validated int trainNumber. 
    */
 
-  public int getValidTrainNumber() {
+  private int getValidTrainNumber() {
     
     String trainNumberInput = input.next();
 
@@ -155,7 +185,7 @@ public class UserInterface {
   * @return input validated and parsed to int.
   *    
   */
-  public int getValidTrackNumber() {
+  private int getValidTrackNumber() {
     
     String trackNumberInput = input.next();
     int trackNumber = 0;
@@ -190,7 +220,7 @@ public class UserInterface {
    * 
    */
 
-  public LocalTime getValidLocalTime() {
+  private LocalTime getValidLocalTime() {
     
     String localTime;
     LocalTime validLocalTime = null;
@@ -203,7 +233,7 @@ public class UserInterface {
             
       if (localTime.matches("\\d{2}:\\d{2}")) {
         try {
-          validLocalTime = Parser.stringToLocalTime(localTime);
+          validLocalTime = TimeHandler.stringToLocalTime(localTime);
           running = false;
         } catch (DateTimeParseException e) {
           System.out.println("Hours must be in interval [00-23]" 
@@ -248,7 +278,7 @@ public class UserInterface {
     //dummy line
     input.nextLine();
 
-    System.out.println("What is the departures destination? ");
+    System.out.println("What is the departure`s destination? ");
 
     String destination = input.nextLine();
     if (destination.length() > 14) {
@@ -290,7 +320,7 @@ public class UserInterface {
    *Method takes input from user and adds track to departure.
    */
 
-  public void grantTrack(int trainNumber) {
+  private void grantTrack(int trainNumber) {
 
     TrainDeparture wantedDeparture = trainRegister.wantedDeparture(trainNumber);
     if (wantedDeparture == null) {
@@ -376,13 +406,13 @@ public class UserInterface {
     LocalTime validDelay = getValidLocalTime(); 
 
     //Departure time after with addition of delay.
-    LocalTime newDepartureTime = currentTrainDeparture.departureTimeAfterDelay()
+    LocalTime newDepartureTime = currentTrainDeparture.actualDepartureTime()
           .plusHours(validDelay.getHour())
           .plusMinutes(validDelay.getMinute());
 
     //Checks if the departure time after delay addition, exceedes midnight/next day.
     if (newDepartureTime.isBefore(currentTrainDeparture
-          .departureTimeAfterDelay())) {
+          .actualDepartureTime())) {
       System.out.println(
           "\nCould not add delay as departure time will exceed midnight. Please try again.\n");
       
@@ -412,7 +442,7 @@ public class UserInterface {
     while (running) {
       destinationInput = input.nextLine().trim();
       TrainDeparture[] wantedDepartureList = trainRegister
-          .departuresToWantedDestination(destinationInput);
+          .searchByDestination(destinationInput);
          
       if (wantedDepartureList.length == 0) {
         System.out.println("No departure with the destination " 
@@ -425,7 +455,7 @@ public class UserInterface {
     System.out.println("Wanted departure: ");
     printDepartureFormatStart();
           
-    Arrays.stream(trainRegister.departuresToWantedDestination(destinationInput))
+    Arrays.stream(trainRegister.searchByDestination(destinationInput))
         .forEach(d -> System.out.println(d));
     System.out.println(
          "--------------------------------------------------------------------------");
@@ -438,7 +468,8 @@ public class UserInterface {
 
   private void updateClock() {
 
-    System.out.println("Current time is " + clock + "\nEnter new time as hh:mm - ");
+    System.out.println("Current time is " 
+        + clock.getCurrentTime() + "\nEnter new time as hh:mm - ");
     
     String time;
     boolean running = true;
@@ -449,10 +480,10 @@ public class UserInterface {
             
       if (time.matches("\\d{2}:\\d{2}")) {
         try {
-          if (Parser.stringToLocalTime(time).isBefore(clock)) {
+          if (TimeHandler.stringToLocalTime(time).isBefore(clock.getCurrentTime())) {
             System.out.println("New time must be after current time.");     
           } else {
-            clock = Parser.stringToLocalTime(time);
+            clock.updateCurrentTime(TimeHandler.stringToLocalTime(time));
             running = false;
           }
         } catch (DateTimeParseException e) {
@@ -465,31 +496,5 @@ public class UserInterface {
             
     }    
   }
-  /**.
-   *
-   * @param amountChoices how many choices the user will be given in a menu.
-   * @return user choice parsed and validated.
-   * 
-   */
-
-  public int menuInput(int amountChoices) {
-    String userInput = input.next();
-    boolean validating = true;
-    int userchoice = 0;
-
-    while (validating) {
-
-      try {
-        userchoice = Integer.parseInt(userInput);
-        validating = false;
-      } catch (NumberFormatException nfe) {
-        System.out.println("You must enter a number. Between 1 and " + amountChoices);
-      
-        userInput = input.next();
-      }
-        
-    } 
-    return userchoice;
-  }
-}
+} 
 
