@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-import edu.ntnu.stud.Utils.Printer;
 import java.time.LocalTime;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 /**.
@@ -136,7 +136,7 @@ class TestTrainRegister {
     testRegister.addDeparture(oslo);
     testRegister.addDeparture(stabekk);
 
-    assertArrayEquals(expected, testRegister.departuresToWantedDestination("Bygdøy"));
+    assertArrayEquals(expected, testRegister.searchByDestination("Bygdøy"));
   }
   
   @Test
@@ -175,17 +175,10 @@ class TestTrainRegister {
     testRegister.addDeparture(oslo);
     testRegister.addDeparture(asker);
     testRegister.addDeparture(bergen);   
-
-    Printer.printDepartureListStart();
-
-    System.out.println(haslum);
-    System.out.println(oslo);
-    System.out.println(asker);
-    System.out.println(bergen);
-
   
     
-    testRegister.printSortedList();
+    Arrays.stream(testRegister.sortedDepartureList())
+          .forEach(d -> System.out.println(d));
 
     String haslumExpected =
         "|      23:40           L2        3             Haslum                9  |"; 
