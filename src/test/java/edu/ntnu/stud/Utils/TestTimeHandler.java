@@ -1,4 +1,4 @@
-package edu.ntnu.stud.Utils;
+package edu.ntnu.stud.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.time.DateTimeException;
 import java.time.LocalTime;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
 
 /**.
  * Test class for TimeHandler class
@@ -77,6 +78,7 @@ public class TestTimeHandler {
     );
     assertEquals("Text 'Invalid' could not be parsed at index 0", exception.getMessage());
   }
+  
   @Test
   public void stringToLocalTime_Valid() {
     String validTime = "10:00";

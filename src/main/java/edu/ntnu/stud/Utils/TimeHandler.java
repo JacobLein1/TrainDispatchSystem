@@ -1,4 +1,4 @@
-package edu.ntnu.stud.Utils;
+package edu.ntnu.stud.utils;
 
 import java.time.LocalTime;
 
