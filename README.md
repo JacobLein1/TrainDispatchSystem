@@ -1,5 +1,4 @@
 # Portfolio project IDATA1003 - 2023
-This file uses Mark Down syntax. For more information see [here](https://www.markdownguide.org/basic-syntax/).
 
 STUDENT NAME = "Jacob Lein"  
 STUDENT ID = "593618"
@@ -17,7 +16,7 @@ JUnit-test classes can be found in the source folder under the *test* folder.
 
 ## Link to repository
 
-https://gitlab.stud.idi.ntnu.no/JacobLein/mappevurdering
+[Repository](https://gitlab.stud.idi.ntnu.no/JacobLein/mappevurdering)
 
 ## How to run the project
 
