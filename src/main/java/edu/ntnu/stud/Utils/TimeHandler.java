@@ -2,31 +2,48 @@ package edu.ntnu.stud.Utils;
 
 import java.time.LocalTime;
 
-/**.
- * 
+/**
+ * A utility class for handling time-related operations.
  */
 public class TimeHandler {
     
   private LocalTime currentTime;
 
+  /**
+   * Constructs a TimeHandler object with the specified current time.
+   *
+   * @param currentTime the current time
+   */
   public TimeHandler(LocalTime currentTime) {
     updateCurrentTime(currentTime);
   }
 
+  /**
+   * Returns the current time.
+   *
+   * @return the current time
+   */
   public LocalTime getCurrentTime() {
     return currentTime;
   }
 
+  /**
+   * Updates the current time to the specified new current time.
+   *
+   * @param newCurrentTime the new current time
+   */
   public void updateCurrentTime(LocalTime newCurrentTime) {
     currentTime = newCurrentTime;
   }
 
-  /**.
-  *
-  * @param time Time wanted to be parsed.
-  * @return time parsed to LocalTime  
-  */
-
+  /**
+   * Parses the specified time string into a LocalTime object.
+   *
+   * @param time the time string to be parsed
+   * @return the parsed LocalTime object
+   * @throws IllegalArgumentException if the time string is empty
+   * @throws java.time.DateTimeException if the time string is in the wrong format
+   */
   public static LocalTime stringToLocalTime(String time) {    
     LocalTime timeParsed = LocalTime.of(0, 0);
 
