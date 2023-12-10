@@ -3,14 +3,17 @@ package edu.ntnu.stud;
 import edu.ntnu.stud.Utils.TimeHandler;
 import edu.ntnu.stud.models.TrainDeparture;
 import edu.ntnu.stud.models.TrainRegister;
-
-import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+//TODO: Fikse testtimehandler klassen
+//TODO: Lag flere tester for register
+//TODO: Lag klassediagram
+//TODO: Vurder å flytte menyer til metoder.
+//TODO: 
 
 /**.
  * User interface class
@@ -18,7 +21,7 @@ import java.util.regex.Pattern;
 public class UserInterface {
    
   private final TrainRegister trainRegister = new TrainRegister();
-  TimeHandler clock = new TimeHandler(LocalTime.of(0, 0));
+  private static TimeHandler clock = new TimeHandler(LocalTime.of(0, 0));
   private static final Scanner input = new Scanner(System.in);
   
   /**.
@@ -281,9 +284,9 @@ public class UserInterface {
     System.out.println("What is the departure`s destination? ");
 
     String destination = input.nextLine();
-    if (destination.length() > 14) {
+    if (destination.length() > 14 || destination.equals("") || destination.equals(" ")) {
       System.out.println(
-          "Destination name can not be longer than 14 characters. Please try again. ");
+          "Destination name has to be an input and can not be longer than 14 characters. Please try again. ");
       destination = input.nextLine();
     }
           
