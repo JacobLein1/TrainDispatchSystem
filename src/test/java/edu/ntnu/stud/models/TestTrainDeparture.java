@@ -239,15 +239,6 @@ class TestTrainDeparture {
     assertEquals("|      22:46           L3       98           Grønland                   |",
          asker.toString());
   }
-  /* 
-  @Test 
-   void testCompareToExtreme() {
-    LocalTime input = LocalTime.parse("22:46");
-    TrainDeparture barum = new TrainDeparture(99, 2, "L2", "Hovik", input, LocalTime.of(0, 1));
-      
-    assertEquals(100000, barum.getTrainNumber());
-
-  }*/
 
  
 }
