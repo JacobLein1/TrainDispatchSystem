@@ -28,7 +28,8 @@ public class TrainDeparture {        //Information regarding train departure
   public TrainDeparture(int trainNumber, int track, String line, 
       String destination, LocalTime departureTime, LocalTime delay) {
     if (trainNumber < 0 || trainNumber > 99) {
-      throw new IllegalArgumentException("Train number must be positive. Between [0-99]");
+      throw new IllegalArgumentException(
+        "Train number must be positive whole number. Between [0-99]");
     }
     if (line.equals(" ") || line.equals("") || line.length() > 3) {
       throw new IllegalArgumentException("Line has to be an input. With max length of 3 symbols.");
