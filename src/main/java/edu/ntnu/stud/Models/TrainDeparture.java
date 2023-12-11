@@ -56,9 +56,6 @@ public class TrainDeparture {        //Information regarding train departure
     if (departureTime == null) {
       throw new IllegalArgumentException("Must add a departure time. ");
     }
-    
-
-    //også hvis den er tom, 0, mellomrom, String
 
     this.trainNumber = trainNumber;
     setTrack(track);
@@ -70,7 +67,7 @@ public class TrainDeparture {        //Information regarding train departure
   }
   
   //Getter-methods
-  
+
   public int getTrainNumber() {
     return trainNumber;
   }
@@ -96,6 +93,7 @@ public class TrainDeparture {        //Information regarding train departure
   }
 
   //Setter-methods
+
   /**.
    *
    * @param inputTrack new track for departure.
@@ -127,17 +125,28 @@ public class TrainDeparture {        //Information regarding train departure
     
   }
 
-  //method to check if trainnumber already exists
+  /**.
+   *
+   * @param otherDeparture The departure to compare to.
+   *
+   * @return 0 if equal, 1 if this is greater, -1 if this is less
+   * 
+   * 
+   */
   public int compareTo(TrainDeparture otherDeparture) {
     return Integer.compare(this.getTrainNumber(), otherDeparture.getTrainNumber());
   }
+  /**.
+   *
+   * @return true if delay is not 00:00 (has delay)
+   */
 
   public boolean hasDelay() {
     return getDelay() != LocalTime.parse("00:00");
   } 
   /**.
    *
-   * @return The departure's time after delay is added.
+   * @return The departure's time after delay is added(LocalTime).
    */
 
   public LocalTime actualDepartureTime() {
@@ -145,7 +154,7 @@ public class TrainDeparture {        //Information regarding train departure
   }
   /**.
    *
-   *@return A departure returned as a string, withoout irrelevant information.
+   *@return A departure returned as a string, without irrelevant information.
    */
   
   public String toString() {

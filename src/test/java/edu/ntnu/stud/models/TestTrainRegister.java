@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.time.LocalTime;
+import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -90,6 +92,14 @@ class TestTrainRegister {
   }
 
   @Test
+  void testRemoveNotFound() {
+
+    testRegister.addDeparture(oslo);
+    testRegister.removeDeparture(2);
+    assertEquals(1, testRegister.getListOfDepartures().length);
+  }
+
+  @Test
   void testwantedDeparture() {
     
     testRegister.addDeparture(oslo);
@@ -119,7 +129,7 @@ class TestTrainRegister {
   }
   
   @Test
-  void testDeparturesToWantedDestination() {
+  void testSearchByDestination() {
 
     TrainDeparture stabekk = new TrainDeparture(2, 1, "L3", "Bygdøy",
         LocalTime.of(22, 30), LocalTime.of(0, 2));
@@ -151,43 +161,34 @@ class TestTrainRegister {
   }
   
   @Test
-  void testDepartureToString() {
+  void departuresAfterTimeLength() {
+    
+    testRegister.addDeparture(oslo);
+    testRegister.addDeparture(tromso);
 
-    TrainDeparture haslum = new TrainDeparture(3, 9, "L2", "Haslum",
-        LocalTime.of(23, 40), LocalTime.of(0, 0));
-    TrainDeparture oslo = new TrainDeparture(1, 0, "L3", "Oslo",
-        LocalTime.of(22, 28), LocalTime.of(0, 1));
-    TrainDeparture asker = new TrainDeparture(2, 1, "L3", "Asker",
-        LocalTime.of(22, 28), LocalTime.of(0, 3));
-    TrainDeparture bergen = new TrainDeparture(4, 0, "L3", "Bergen",
-        LocalTime.of(22, 28), LocalTime.of(0, 0));    
+    testRegister.departuresAfterTime(LocalTime.of(22, 45));
+    
+    assertEquals(1, testRegister.getListOfDepartures().length);
+  }
+
+  @Test
+  void departuresAfterTime() {
+    TrainDeparture haslum = new TrainDeparture(4, 2, "L3", "Bygdøy",
+        LocalTime.of(8, 40), LocalTime.of(0, 0));
     
     testRegister.addDeparture(haslum);
     testRegister.addDeparture(oslo);
-    testRegister.addDeparture(asker);
-    testRegister.addDeparture(bergen);   
-
-    String haslumExpected =
-        "|      23:40           L2        3             Haslum                9  |"; 
-    assertEquals(haslumExpected, haslum.toString());
-
-    String osloExpected = 
-        "|      22:28           L3        1               Oslo    00:01       0  |";
-    assertEquals(osloExpected, oslo.toString());
-
-    String askerExpected =
-        "|      22:28           L3        2              Asker    00:03       1  |";
-    assertEquals(askerExpected, asker.toString());
-
-    String bergenExpected = 
-        "|      22:28           L3        4             Bergen                0  |";
-    assertEquals(bergenExpected, bergen.toString());
+    testRegister.addDeparture(tromso);
     
+    Arrays.stream(testRegister.getListOfDepartures()).forEach(System.out::println);
+   
+    testRegister.departuresAfterTime(LocalTime.of(22, 40));
     
+    TrainDeparture[] expected = {tromso};
     
-    
-        
-      
+    assertArrayEquals(expected, testRegister.getListOfDepartures());
+    assertEquals(expected[0], testRegister.getListOfDepartures()[0]);
   }
+  
 }
 

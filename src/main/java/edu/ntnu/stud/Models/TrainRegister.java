@@ -29,7 +29,8 @@ public class TrainRegister {
 
   private ArrayList<TrainDeparture> departureList = new ArrayList<>();
   /**.
-   * Add new train departure method
+   *
+   * @param newDeparture new departure to be added.
    */
 
   public void addDeparture(TrainDeparture newDeparture) {
@@ -44,7 +45,7 @@ public class TrainRegister {
   }
   /**.
    *
-   * @param trainNumber Train number of departure wanted to be removed
+   * @param trainNumber Train number of departure wanted to be removed.
    * 
    */
 
@@ -66,9 +67,9 @@ public class TrainRegister {
 
   /**.
   *
-  *@param trainNumber the wanted trainnumber
+  *@param trainNumber the wanted trainnumber.
   *
-  *@return found departures of the right trainNumber
+  *@return found departure of the right trainNumber, null if none found.
   */
   
   public TrainDeparture wantedDeparture(int trainNumber) {
@@ -121,7 +122,6 @@ public class TrainRegister {
   /**.
   *
   * @return a sorted list of departures by departure time without regarding delay.
-  used to make this method
   */
 
   public TrainDeparture[] sortedDepartureList() {

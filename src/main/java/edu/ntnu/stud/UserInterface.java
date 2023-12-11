@@ -69,7 +69,7 @@ public class UserInterface {
   }
 
   /**.
-   * Starts up the main menu.
+   * Starts the menu.
    */
   public void start() {
     
@@ -132,7 +132,8 @@ public class UserInterface {
   /**.
    *
    * @param amountChoices how many choices the user will be given in a menu.
-   * @return user choice parsed and validated.
+   *
+   * @return user choice validated and parsed to integer.
    * 
    */
 
@@ -257,7 +258,7 @@ public class UserInterface {
   }
 
   /**.
-  * Takes user input to add new departure.
+  * Handles user input to add new departure.
   */
   private void addDeparture() {
     System.out.println("What is the train number of the new departure? ");
@@ -347,7 +348,7 @@ public class UserInterface {
     }
   }
   /**.
-   * Prints a wanted departure by train number.
+   * Prints a wanted departure by train number, and gives choices to operator.
    */
 
   private void searchDepartures() {
@@ -405,8 +406,12 @@ public class UserInterface {
   }
   /**.
    * Takes input from user, and adds delay to a departure. 
+   * 
+   * <p>Will not allow ooperator to add delay if departure time will exceed midnight.
    *
    * @param trainNumber train number of wanted departure.
+   * 
+   *
    */
 
   private void addDelayToDeparture(int trainNumber) {
@@ -443,6 +448,7 @@ public class UserInterface {
  
   /**.
    * Prints all departures to input destination.
+   * Will print message if no departures to input destination is found.
    */
 
   private void destinationSearch() {
