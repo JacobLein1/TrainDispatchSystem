@@ -22,16 +22,15 @@ class TestTrainDeparture {
 
   @Test 
   void invalidTrainNumberNegative() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(-1, 1, "L3", "Helvete", time, LocalTime.of(0, 0));
-    });
+    assertThrows(IllegalArgumentException.class, () -> 
+      new TrainDeparture(-1, 1, "L3", "Helvete", time, LocalTime.of(0, 0))
+    );
   }
 
   @Test 
   void invalidTrainNumberHighLimit() {
     assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(1000,
-           1, "L3", "Helvete", time, LocalTime.of(0, 0));
+      new TrainDeparture(1000, 1, "L3", "Helvete", time, LocalTime.of(0, 0));
     });
   }
 
@@ -39,7 +38,7 @@ class TestTrainDeparture {
   void invalidLineHighLimit() {
     IllegalArgumentException exception = assertThrows(
         IllegalArgumentException.class, () -> {
-        TrainDeparture drammen = new TrainDeparture(2, 1, "1234",
+        new TrainDeparture(2, 1, "1234",
             "Helvete", time, LocalTime.of(0, 0));
       });
     assertEquals("Line has to be an input. With max length of 3 symbols.", exception.getMessage());
@@ -49,7 +48,7 @@ class TestTrainDeparture {
   void invalidLineEmpty() {
     IllegalArgumentException exception = assertThrows(
         IllegalArgumentException.class, () -> {
-        TrainDeparture drammen = new TrainDeparture(2, 1, "",
+        new TrainDeparture(2, 1, "",
             "Helvete", time, LocalTime.of(0, 0));
       });
     assertEquals("Line has to be an input. With max length of 3 symbols.", exception.getMessage());
@@ -59,7 +58,7 @@ class TestTrainDeparture {
   void invalidLineSpace() {
     IllegalArgumentException exception = assertThrows(
         IllegalArgumentException.class, () -> {
-        TrainDeparture drammen = new TrainDeparture(2, 1, " ",
+        new TrainDeparture(2, 1, " ",
             "Helvete", time, LocalTime.of(0, 0));
       });
     assertEquals("Line has to be an input. With max length of 3 symbols.", exception.getMessage());
@@ -69,7 +68,7 @@ class TestTrainDeparture {
   @Test 
     void invalidTrack() {
     IllegalArgumentException excception = assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(2, -9, "L3", "Helvete", time, LocalTime.of(0, 0));
+      new TrainDeparture(2, -9, "L3", "Helvete", time, LocalTime.of(0, 0));
     });
     assertEquals("Track number must be positive.", excception.getMessage());
   }
@@ -77,7 +76,7 @@ class TestTrainDeparture {
   @Test 
     void invalidDestinationHighLimit() {
     IllegalArgumentException excception = assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(2, -9, "L3",
+      new TrainDeparture(2, -9, "L3",
            "123456789123456", time, LocalTime.of(0, 0));
     });
     assertEquals("Destination has to be an input under 14 characters. ", excception.getMessage());
@@ -86,7 +85,7 @@ class TestTrainDeparture {
   @Test 
     void invalidDestinationEmpty() {
     IllegalArgumentException excception = assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(2, -9, "L3",
+      new TrainDeparture(2, -9, "L3",
            "", time, LocalTime.of(0, 0));
     });
     assertEquals("Destination has to be an input under 14 characters. ", excception.getMessage());
@@ -95,7 +94,7 @@ class TestTrainDeparture {
   @Test 
     void invalidDestinationSpace() {
     IllegalArgumentException excception = assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(2, -9, "L3",
+      new TrainDeparture(2, -9, "L3",
            " ", time, LocalTime.of(0, 0));
     });
     assertEquals("Destination has to be an input under 14 characters. ", excception.getMessage());
@@ -104,7 +103,7 @@ class TestTrainDeparture {
   @Test 
     void invalidDepartureTime() {
     IllegalArgumentException excception = assertThrows(IllegalArgumentException.class, () -> {
-      TrainDeparture drammen = new TrainDeparture(2, -1, "L3",
+      new TrainDeparture(2, -1, "L3",
            "Helvete", null, LocalTime.of(0, 0));
     });
     assertEquals("Must add a departure time. ", excception.getMessage());

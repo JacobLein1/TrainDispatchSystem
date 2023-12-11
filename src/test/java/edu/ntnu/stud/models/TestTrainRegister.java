@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.time.LocalTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,9 +35,9 @@ class TestTrainRegister {
 
   @BeforeEach
   void setup() {
-   oslo = new TrainDeparture(1, 1, "L3",
+    oslo = new TrainDeparture(1, 1, "L3",
          "Bygdøy", LocalTime.of(22, 30), LocalTime.of(0, 3));
-   tromso = new TrainDeparture(2, 1, "L3",
+    tromso = new TrainDeparture(2, 1, "L3",
          "Bygdøy", LocalTime.of(22, 46), LocalTime.of(0, 2));
   }
 
@@ -62,8 +61,8 @@ class TestTrainRegister {
   @Test
   void addDepartureLenght() {
 
-        testRegister.addDeparture(oslo);
-        assertEquals(1, testRegister.getListOfDepartures().length);
+    testRegister.addDeparture(oslo);
+    assertEquals(1, testRegister.getListOfDepartures().length);
   }
 
   @Test()
