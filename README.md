@@ -5,7 +5,6 @@ STUDENT ID = "593618"
 
 ## Project description
 
-[//]: # (TODO: Write a short description of your project/product here.)
 
 This project is the final evaluation of IDATT 1003 (Programmering 1). The task was to create a simplified system to represent a single train station's departures. The system includes a text-based user interface. The user interface is obligated to include certain choices for a potential operator.  
 
@@ -24,7 +23,6 @@ To start the program the user needs to run the class *TrainDispatchApp*. The pro
 
 ## How to run the tests
 
-[//]: # (TODO: Describe how to run the tests here.)
 You can either run the tests through your own IDE. Or you can compile the program using Maven.
 
 ## References
