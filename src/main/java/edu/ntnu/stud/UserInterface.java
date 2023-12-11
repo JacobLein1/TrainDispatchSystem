@@ -9,14 +9,19 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-//TODO: Fikse testtimehandler klassen
 //TODO: Lag flere tester for register
 //TODO: Vurder å flytte menyer til metoder.
 
 /**
- * Represents the user interface for a train departure system.
- * Provides methods for initializing the system, starting the menu, and performing various operations on train departures.
- * The class uses a TrainRegister object to manage the train departures.
+ * <h2>The user interface for a train departure system.</h2>
+ * <h3>Provides methods for:</h3>
+ * <u>
+ * <li>initializing the system</li>
+ * <li>starting the menu</li>
+ * <li>performing actions in the menu</li>
+ * <li>validating various user inputs</li>
+ * 
+ * </u>
  */
 public class UserInterface {
    
@@ -303,7 +308,6 @@ public class UserInterface {
 
   /**.
    * Removes departure. 
-   * 
    */
   private void removeDeparture() {
     System.out.println(
@@ -321,10 +325,12 @@ public class UserInterface {
     }
     
   }
-  /**.
-   * Takes input from user and grants track to departure.
-   */
 
+  /**
+   * Takes input from user and grants track to departure.
+   *
+   * @param trainNumber train number of wanted departure.
+   */
   private void grantTrack(int trainNumber) {
 
     TrainDeparture wantedDeparture = trainRegister.wantedDeparture(trainNumber);
@@ -399,6 +405,8 @@ public class UserInterface {
   }
   /**.
    * Takes input from user, and adds delay to a departure. 
+   *
+   * @param trainNumber train number of wanted departure.
    */
 
   private void addDelayToDeparture(int trainNumber) {
@@ -468,7 +476,7 @@ public class UserInterface {
         
   }
   /**.
-   *Method for user to manually update clock.
+   *Method for operator to manually update clock.
    */
 
   private void updateClock() {
