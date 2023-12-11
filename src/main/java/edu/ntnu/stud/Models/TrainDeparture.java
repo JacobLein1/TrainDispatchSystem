@@ -15,7 +15,7 @@ import java.time.LocalTime;
  * 
  * <li>Immutable variables: Line, Train number, Destination, Track <li>
  *
- *  <p>Will throw error messages if wrong value.
+ *  <p>Will throw error messages if invalid value.
  *
  * @author Jacob Lein
  * @version 0.1
