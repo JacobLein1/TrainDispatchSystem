@@ -45,7 +45,7 @@ public class TimeHandler {
    * @throws java.time.DateTimeException if the time string is in the wrong format
    */
   public static LocalTime stringToLocalTime(String time) {    
-    LocalTime timeParsed = LocalTime.of(0, 0);
+    LocalTime timeParsed;
 
     if (time.equals("")) {
       throw new IllegalArgumentException("You must enter a time, try again.");

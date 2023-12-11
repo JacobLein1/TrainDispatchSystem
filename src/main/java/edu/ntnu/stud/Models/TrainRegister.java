@@ -2,25 +2,27 @@ package edu.ntnu.stud.models;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
 
 
 /**
- * TrainRegister class 
+ * <h2>TrainRegister class</h2> 
  * Consist of the train registry, as an ArrayList of elements of the class Train.
  * 
- * <p>As well as the methods: 
- * 
- * <p>addTrainDeparture
- * checkDuplicate
- * wantedDeparture
- * getListOfDepartures
- * departuresToWantedDestination
- * departuresAfterTime
- * sortedDepartureList
+ * <h3>As well as the methods:</h3> 
+ * <ul>
+ * <li>addTrainDeparture</li>
+ * <li>checkDuplicate</li>
+ * <li>wantedDeparture</li>
+ * <li>getListOfDepartures</li>
+ * <li>departuresToWantedDestination</li>
+ * <li>departuresAfterTime</li>
+ * <li>sortedDepartureList</li>
+ * </ul>
+ *
+ * @version 0.2
  */
 public class TrainRegister { 
   
@@ -58,11 +60,7 @@ public class TrainRegister {
      d.getTrainNumber() == chosenDeparture.getTrainNumber())
     .collect(Collectors.toList()).toArray(TrainDeparture[]::new);
 
-    if (duplicateStream.length == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return duplicateStream.length > 0;
     
   }
 

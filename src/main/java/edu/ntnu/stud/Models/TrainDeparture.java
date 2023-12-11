@@ -3,16 +3,23 @@ package edu.ntnu.stud.models;
 import java.time.LocalTime;
 
 /**
- * The train dispatch table.
- * Information this class will involve, and their datatype:  
- * Departure time(LocalTime), Line(String), Train number(int)
- * Destination(String), Track(int), Delay(LocalTime)
- * Immutable variables: Line, Train number, Destination, Track 
+ * <h2>TrainDeparture class</h2>
+ * This class will include the following fields: 
+ * <ul> 
+ * <li>Departure time(LocalTime)</li>
+ * <li>Line(String) </li>
+ * <li>Train number(int)</li>
+ * <li>Destination(String)</li>
+ * <li>Track(int), Delay(LocalTime)</li>
+ * </ul>
+ * 
+ * <li>Immutable variables: Line, Train number, Destination, Track <li>
  *
  *  <p>Will throw error messages if wrong value.
  *
  * @author Jacob Lein
- * @version 1.0
+ * @version 0.1
+ * @see TrainRegister
  */
 public class TrainDeparture {        //Information regarding train departure
   private final int trainNumber;
@@ -23,7 +30,16 @@ public class TrainDeparture {        //Information regarding train departure
   private LocalTime delay;
 
   /**.
-  *Constructor for a departure 
+  *<h2>Constructor for a departure</h2>
+  * Variables limited to the following values:
+  *<ul>
+  *<li>Train number: 0-99</li>
+  *<li>Track: 1-9 (-1 if not given)</li>
+  *<li>Line: 1-3 characters</li>
+  *<li>Destination: 1-14 characters</li>
+  *<li>Departure time: LocalTime limits</li>
+  *<li>Delay: LocalTime limits</li>
+  *</ul>
   */
   public TrainDeparture(int trainNumber, int track, String line, 
       String destination, LocalTime departureTime, LocalTime delay) {
@@ -96,15 +112,13 @@ public class TrainDeparture {        //Information regarding train departure
   private void setDelay(LocalTime delay) {
     this.delay = delay;
   }
+
   /**
  * Adds hours and minutes to the original delay.
  *
  * @param delayTime Amount of delay.
- *                      Should be in the format of {@code LocalTime}.
- *                      It represents both hours and minutes to be added.
+ *
  */
-
-  //Set delay function, but adds instead. 
   public void addDelay(LocalTime delayTime) {
       
     delay = delay.plusMinutes(delayTime.getMinute());

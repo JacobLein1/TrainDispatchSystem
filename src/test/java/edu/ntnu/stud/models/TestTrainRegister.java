@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 /**.
@@ -69,7 +68,6 @@ class TestTrainRegister {
       testRegister.addDeparture(oslo);
     });
 
-    //Fikse sjekk på at lengden på listen stemmer
   }
 
   @Test
@@ -175,10 +173,6 @@ class TestTrainRegister {
     testRegister.addDeparture(oslo);
     testRegister.addDeparture(asker);
     testRegister.addDeparture(bergen);   
-  
-    
-    Arrays.stream(testRegister.sortedDepartureList())
-          .forEach(d -> System.out.println(d));
 
     String haslumExpected =
         "|      23:40           L2        3             Haslum                9  |"; 

@@ -8,10 +8,6 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-//test alle metoder med logikk, test konstruktøren
-
-
 class TestTrainDeparture {
   LocalTime time;
   TrainDeparture oslo;

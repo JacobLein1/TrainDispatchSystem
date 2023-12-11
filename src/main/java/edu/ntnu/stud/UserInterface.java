@@ -1,8 +1,8 @@
 package edu.ntnu.stud;
 
-import edu.ntnu.stud.Utils.TimeHandler;
 import edu.ntnu.stud.models.TrainDeparture;
 import edu.ntnu.stud.models.TrainRegister;
+import edu.ntnu.stud.utils.TimeHandler;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 
 //TODO: Fikse testtimehandler klassen
 //TODO: Lag flere tester for register
-//TODO: Lag klassediagram
 //TODO: Vurder å flytte menyer til metoder.
-//TODO: 
 
-/**.
- * User interface class
+/**
+ * Represents the user interface for a train departure system.
+ * Provides methods for initializing the system, starting the menu, and performing various operations on train departures.
+ * The class uses a TrainRegister object to manage the train departures.
  */
 public class UserInterface {
    
@@ -25,7 +25,7 @@ public class UserInterface {
   private static final Scanner input = new Scanner(System.in);
   
   /**.
-   * Initalise all pre-set example departures.
+   * Initalise all test departures.
    */
 
   public TrainRegister init() {
@@ -64,7 +64,7 @@ public class UserInterface {
   }
 
   /**.
-   * Starts up the menu.
+   * Starts up the main menu.
    */
   public void start() {
     
@@ -152,7 +152,7 @@ public class UserInterface {
   }
 
   /**.
-   * Method to print format above departure, for visuals.
+   * Method to print table header, for visuals.
    */
 
   private void printDepartureFormatStart() {
@@ -166,6 +166,7 @@ public class UserInterface {
                 "|_______________________________________________________________________|");
   }
   /**.
+   * Parses and validates train number input.
    *
    * @return parsed and validated int trainNumber. 
    */
@@ -184,9 +185,9 @@ public class UserInterface {
   }
 
   /**.
+  * Parses and validates track number input.
   *
-  * @return input validated and parsed to int.
-  *    
+  * @return input validated and parsed to int.    
   */
   private int getValidTrackNumber() {
     
@@ -218,9 +219,9 @@ public class UserInterface {
     return trackNumber;
   }
   /**.
+   * Parses and validates LocalTime input.
    *
    * @return LocalTime parsed and validated.
-   * 
    */
 
   private LocalTime getValidLocalTime() {
@@ -251,7 +252,7 @@ public class UserInterface {
   }
 
   /**.
-  *Takes user input to add new departure.
+  * Takes user input to add new departure.
   */
   private void addDeparture() {
     System.out.println("What is the train number of the new departure? ");
@@ -286,7 +287,8 @@ public class UserInterface {
     String destination = input.nextLine();
     if (destination.length() > 14 || destination.equals("") || destination.equals(" ")) {
       System.out.println(
-          "Destination name has to be an input and can not be longer than 14 characters. Please try again. ");
+          "Destination name has to be an input and can not be longer than 14 characters." 
+            + " Please try again. ");
       destination = input.nextLine();
     }
           
@@ -300,7 +302,7 @@ public class UserInterface {
   }
 
   /**.
-   *Method for UI to remove departure. 
+   * Removes departure. 
    * 
    */
   private void removeDeparture() {
@@ -320,7 +322,7 @@ public class UserInterface {
     
   }
   /**.
-   *Method takes input from user and adds track to departure.
+   * Takes input from user and grants track to departure.
    */
 
   private void grantTrack(int trainNumber) {
@@ -396,7 +398,7 @@ public class UserInterface {
     }
   }
   /**.
-   * Method takes input from user, and adds delay to a departure. 
+   * Takes input from user, and adds delay to a departure. 
    */
 
   private void addDelayToDeparture(int trainNumber) {
