@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-//TODO: Lag flere tester for register
-//TODO: Vurder å flytte menyer til metoder.
 
 /**
  * <h2>The user interface for a train departure system.</h2>
